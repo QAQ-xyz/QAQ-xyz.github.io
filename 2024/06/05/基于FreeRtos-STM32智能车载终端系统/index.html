@@ -16,23 +16,19 @@
   <meta name="author" content="xiaoyuzi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="taf-uboot-kernel-rootfs">
-<meta property="og:type" content="article">
-<meta property="og:title" content="stm32mp157启动及裸机程序处理">
-<meta property="og:url" content="http://example.com/2023/09/16/stm32mp157%E5%90%AF%E5%8A%A8%E5%8F%8A%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F%E5%A4%84%E7%90%86/index.html">
+    <meta property="og:type" content="article">
+<meta property="og:title" content="基于FreeRtos+STM32智能车载终端系统">
+<meta property="og:url" content="http://example.com/2024/06/05/%E5%9F%BA%E4%BA%8EFreeRtos-STM32%E6%99%BA%E8%83%BD%E8%BD%A6%E8%BD%BD%E7%BB%88%E7%AB%AF%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="xyz_blog">
-<meta property="og:description" content="taf-uboot-kernel-rootfs">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/logo/stm32mp157.jpg">
-<meta property="article:published_time" content="2023-09-16T05:49:40.000Z">
-<meta property="article:modified_time" content="2024-06-05T05:25:04.792Z">
+<meta property="article:published_time" content="2024-06-05T08:45:43.000Z">
+<meta property="article:modified_time" content="2024-06-05T08:45:43.512Z">
 <meta property="article:author" content="xiaoyuzi">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/logo/stm32mp157.jpg">
   
   
   
-  <title>stm32mp157启动及裸机程序处理 - xyz_blog</title>
+  <title>基于FreeRtos+STM32智能车载终端系统 - xyz_blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +194,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="stm32mp157启动及裸机程序处理"></span>
+            <span id="subtitle" data-typed-text="基于FreeRtos+STM32智能车载终端系统"></span>
           
         </div>
 
@@ -209,8 +205,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-16 13:49" pubdate>
-          2023年9月16日 下午
+        <time datetime="2024-06-05 16:45" pubdate>
+          2024年6月5日 下午
         </time>
       </span>
     
@@ -221,7 +217,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          161 字
+          0 字
         
       </span>
     
@@ -232,7 +228,7 @@
         
         
         
-          2 分钟
+          1 分钟
         
       </span>
     
@@ -269,41 +265,18 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">stm32mp157启动及裸机程序处理</h1>
+            <h1 id="seo-header">基于FreeRtos+STM32智能车载终端系统</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="1、stm32mp157启动方式"><a href="#1、stm32mp157启动方式" class="headerlink" title="1、stm32mp157启动方式"></a>1、stm32mp157启动方式</h1><p>​	相对于MCU的启动方式，MPU的启动要复杂很多。对于MPU的芯片来说，启动方式都是大差不差，大致如下进行；看似先从启动bootloader，但是实际这个bootloader也需要运行的地方。所以大部分的芯片内部都有一小段存放厂商写好的一个裸机程序放在ROM里面，这里的ROM不是指的flash之类的。而是芯片内部的ROM，然后还有一个内部的RAM，这个不是DDR。</p>
-<p>​	stm32mp1的启动方式有以下几种，根据芯片的BOOT0和BOOT1和BOOT2引脚来设置。</p>
-
+                
                 
               </div>
             
             <hr/>
             <div>
               <div class="post-metas my-3">
-  
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" class="category-chain-item">学习总结</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
   
   
 </div>
@@ -314,8 +287,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>stm32mp157启动及裸机程序处理</div>
-      <div>http://example.com/2023/09/16/stm32mp157启动及裸机程序处理/</div>
+      <div>基于FreeRtos+STM32智能车载终端系统</div>
+      <div>http://example.com/2024/06/05/基于FreeRtos-STM32智能车载终端系统/</div>
     </div>
     <div class="license-meta">
       
@@ -327,7 +300,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月16日</div>
+          <div>2024年6月5日</div>
         </div>
       
       
@@ -359,18 +332,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/06/05/%E5%9F%BA%E4%BA%8EFreeRtos-STM32%E6%99%BA%E8%83%BD%E8%BD%A6%E8%BD%BD%E7%BB%88%E7%AB%AF%E7%B3%BB%E7%BB%9F/" title="基于FreeRtos+STM32智能车载终端系统">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">基于FreeRtos+STM32智能车载终端系统</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/11/FreeRTOS%E6%80%BB%E7%BB%93/" title="FreeRTOS总结">
-                        <span class="hidden-mobile">FreeRTOS总结</span>
+                      <a href="/2023/09/16/stm32mp157%E5%90%AF%E5%8A%A8%E5%8F%8A%E8%A3%B8%E6%9C%BA%E7%A8%8B%E5%BA%8F%E5%A4%84%E7%90%86/" title="stm32mp157启动及裸机程序处理">
+                        <span class="hidden-mobile">stm32mp157启动及裸机程序处理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
