@@ -279,12 +279,12 @@
 <li><p>通用异步收发器 <strong>UART</strong>（Universal Asynchronous	Receiver&#x2F;Transmitter)，是一种串行、异步、全双工的通信协议。高电平代表’1‘，低电平代表’0‘。特别注意固定格式位，起始位以0为通信起步，停止位以1作为结束位。</p>
 </li>
 <li><p>整体结构如图：</p>
-<p><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/%E7%BB%93%E6%9E%84%E7%AE%80%E5%9B%BE.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./../photo/%E7%BB%93%E6%9E%84%E7%AE%80%E5%9B%BE.png" srcset="/img/loading.gif" lazyload></p>
 </li>
 </ul>
 <h2 id="1-2参数配置"><a href="#1-2参数配置" class="headerlink" title="1.2参数配置"></a>1.2参数配置</h2><ul>
 <li><p>数据传输格式</p>
-<p><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/UART%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F.png" srcset="/img/loading.gif" lazyload alt="数据格式"></p>
+<p><img src="/./../photo/UART%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F.png" srcset="/img/loading.gif" lazyload alt="数据格式"></p>
 <ul>
 <li>起始位总是以低电平有效，停止位以高电平有效。</li>
 <li>数据位：数据位可以是5、6、7、8，9位等，构成一个字符（一般都是8位）。如ASCII码（7位），扩展BCD码（8位）。先发送<strong>最低位</strong>，最后发送<strong>最高位</strong>，使用低电平表示‘0’高电平表示‘1’完成数据位的传输。</li>
@@ -347,7 +347,7 @@
 <li><p>硬件结构</p>
 <ul>
 <li>IIC使用两根信号线进行通信，要求两根线都使用 <strong>开漏输出接上拉电阻</strong> 的配置，以此实现总线上所有节点SDA、SCL信号的 <strong>线与</strong> 逻辑关系。</li>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/IIC%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84%E4%BD%93%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="结构图"></li>
+<li><img src="/./../photo/IIC%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84%E4%BD%93%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="结构图"></li>
 <li>IIC允许一对多通信，但是同一时间只能有一个丛机跟主机通信</li>
 </ul>
 </li>
@@ -375,14 +375,14 @@
 </ul>
 <h2 id="2-4地址设备为7位的通信过程"><a href="#2-4地址设备为7位的通信过程" class="headerlink" title="2.4地址设备为7位的通信过程"></a>2.4地址设备为7位的通信过程</h2><ul>
 <li>完整通信示意图：<ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/7bit%E8%AE%BE%E5%A4%87%E5%9C%B0%E5%9D%80%E9%80%9A%E4%BF%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
+<li><img src="/./../photo/7bit%E8%AE%BE%E5%A4%87%E5%9C%B0%E5%9D%80%E9%80%9A%E4%BF%A1%E7%A4%BA%E6%84%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
 <li><strong>START信号后，第一个字节包含设备7位地址以及1位读写位，读写位表示主机将要对丛机进行的操作。发送完这个字节之后，主机释放SDA总线等待从机给出ACK应答。如果从机给出了ACK应答，表示从机地址正确（有从机响应）并且已知晓是读还是写，便可以开始读写数据。如果从机没有给出ACK应答，则说明接收设备可能没有收到数据（如寻址的设备不存在或是设备正在忙碌）或无法解析收到的数据，如果是这样，则由主机来决定如何处理（STOP或ReSTART）。</strong><ul>
 <li>情况一：主机写，丛机收，传输过程传输方向不变<ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/%E4%B8%BB%E5%8F%91%E4%B8%9B%E6%94%B6.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
+<li><img src="/./../photo/%E4%B8%BB%E5%8F%91%E4%B8%9B%E6%94%B6.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
 </ul>
 </li>
 <li>情况二：主机收，丛机发送，传输过程传输方向改变<ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/%E4%B8%BB%E6%94%B6%E4%B8%9B%E5%8F%91.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
+<li><img src="/./../photo/%E4%B8%BB%E6%94%B6%E4%B8%9B%E5%8F%91.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
 </ul>
 </li>
 </ul>
@@ -407,7 +407,7 @@
 <h1 id="3、串行外设接口（SPI）"><a href="#3、串行外设接口（SPI）" class="headerlink" title="3、串行外设接口（SPI）"></a>3、串行外设接口（SPI）</h1><h2 id="3-1简介"><a href="#3-1简介" class="headerlink" title="3.1简介"></a>3.1简介</h2><ul>
 <li>SPI，是一<strong>种高速的，全双工，同步</strong>的通信总线，并且在芯片的管脚上只占用四根线。SPI分为主、从两种模式，一个SPI通讯系统需要包含一个（且只能是一个）主设备，一个或多个从设备。提供时钟的为主设备（Master），接收时钟的设备为从设备（Slave），SPI接口的读写操作，都是由主设备发起。当存在多个从设备时，通过各自的片选信号进行管理。</li>
 <li>4线SPI示意图<ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/4%E7%BA%BFSPI%E7%A4%BA%E6%84%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
+<li><img src="/./../photo/4%E7%BA%BFSPI%E7%A4%BA%E6%84%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
 <li><strong>MISO</strong>： <strong>主设备输入&#x2F;从设备输出引脚</strong>。该引脚在从模式下发送数据，在主模式下接收数据。</li>
 <li><strong>MOSI</strong>： <strong>主设备输出&#x2F;从设备输入引脚</strong>。该引脚在主模式下发送数据，在从模式下接收数据。</li>
 <li><strong>SCLK</strong>：<strong>串行时钟信号</strong>，由主设备产生。</li>
@@ -473,7 +473,7 @@
 </li>
 <li><p>以CPOL&#x3D;0,CPHA&#x3D;0为示例时序图，其他同理</p>
 <ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/SPI%E6%97%B6%E5%BA%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="时序图"></li>
+<li><img src="/./../photo/SPI%E6%97%B6%E5%BA%8F%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="时序图"></li>
 <li>由图可以看出来，在传输开始前以及传输完成后，CPOL即SCL都为低电平，表示空闲的时候SCL为低电平状态，由于采样边沿是上升沿，即在第1、3、5、7…..等这些边沿进行采样。</li>
 </ul>
 </li>
@@ -502,15 +502,15 @@
 </ul>
 <h2 id="4-2CAN总线结构"><a href="#4-2CAN总线结构" class="headerlink" title="4.2CAN总线结构"></a>4.2CAN总线结构</h2><ul>
 <li><strong>闭环总线结构</strong>：如图所示，总线两端各连接一个120欧的电阻，两根信号线形成回路。这种CAN总线网络由ISO 11898标准定义，是高速、短距离的CAN网络，通信速率为125kbit&#x2F;s到1Mbit&#x2F;s。在1Mbit&#x2F;s通讯速率时，总线长度最长达40m。<ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/%E9%97%AD%E7%8E%AFCAN%E7%BB%93%E6%9E%84.png" srcset="/img/loading.gif" lazyload alt="总线结构图"></li>
+<li><img src="/./../photo/%E9%97%AD%E7%8E%AFCAN%E7%BB%93%E6%9E%84.png" srcset="/img/loading.gif" lazyload alt="总线结构图"></li>
 </ul>
 </li>
 <li><strong>开环总线结构</strong>：两根信号线独立，各自串联一个2.2k欧的电阻。这种CAN总线网络由ISO11519-2标准定义，是低速、远距离的CAN网络，通信速率最高125kbit&#x2F;s。在40kbit&#x2F;s速率时，总线最长距离可达1000m。<ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/%E5%BC%80%E7%8E%AF%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
+<li><img src="/./../photo/%E5%BC%80%E7%8E%AF%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84%E5%9B%BE.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
 </ul>
 </li>
 <li><strong>CAN总线特性</strong>：CAN总线由两根信号线，CANH和CANL，没有时钟同步信号。所以CAN是一种异步通信方式。两根信号线的电压差CANH-CANL表示CAN总线的电平，与传输的逻辑信号1或0对应。对应于逻辑1的称为隐性（Recessive）电平，对应于逻辑0成为显性（Dominant）电平。<ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/%E9%80%BB%E8%BE%91%E7%94%B5%E5%B9%B3%E4%BF%A1%E5%8F%B7.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
+<li><img src="/./../photo/%E9%80%BB%E8%BE%91%E7%94%B5%E5%B9%B3%E4%BF%A1%E5%8F%B7.png" srcset="/img/loading.gif" lazyload alt="示意图"></li>
 <li>在开环跟闭环的结构里面，隐形电平和显型电平对应的电压值略有不同</li>
 <li>隐性电平表示逻辑1</li>
 <li>显性电平表示逻辑0</li>
@@ -561,7 +561,7 @@
 </li>
 <li><p><strong>标准格式数据帧</strong>：由7个段构成，如下图</p>
 <ul>
-<li><p><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/CAN%E6%95%B0%E6%8D%AE%E5%B8%A7%E6%A0%BC%E5%BC%8F.png" srcset="/img/loading.gif" lazyload alt="数据帧"></p>
+<li><p><img src="/./../photo/CAN%E6%95%B0%E6%8D%AE%E5%B8%A7%E6%A0%BC%E5%BC%8F.png" srcset="/img/loading.gif" lazyload alt="数据帧"></p>
 <ul>
 <li>帧起始:一位显性电平；</li>
 <li>仲裁段禁止ID高7位全为隐性电平；</li>
@@ -584,7 +584,7 @@
 </li>
 <li><p><strong>错误帧</strong>：用于在接收和发送消息时检测出错误通知错误的帧。错误帧由错误标志和错误界定符构成。如图所示</p>
 <ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/%E9%94%99%E8%AF%AF%E5%B8%A7.png" srcset="/img/loading.gif" lazyload alt="错误帧"><ul>
+<li><img src="/./../photo/%E9%94%99%E8%AF%AF%E5%B8%A7.png" srcset="/img/loading.gif" lazyload alt="错误帧"><ul>
 <li>主动错误标志：6 个位的显性位。</li>
 <li>被动错误标志：6 个位的隐性位。</li>
 <li>错误界定符由 8 个位的隐性位构成。</li>
@@ -610,7 +610,7 @@
 </li>
 <li><p><strong>CAN通信错误种类</strong>：如下表</p>
 <ul>
-<li><img src="/2022/10/30/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E6%80%BB%E7%BB%93/photo/CAN%E9%80%9A%E4%BF%A1%E9%94%99%E8%AF%AF.png" srcset="/img/loading.gif" lazyload alt="错误表"></li>
+<li><img src="/./../photo/CAN%E9%80%9A%E4%BF%A1%E9%94%99%E8%AF%AF.png" srcset="/img/loading.gif" lazyload alt="错误表"></li>
 </ul>
 </li>
 <li><p><strong>位时序</strong>：由发送单元在非同步的情况下发送的每秒钟的位数称为位速率。一个位可分为 4 段。同步段（SS）传播时间段（PTS）</p>
