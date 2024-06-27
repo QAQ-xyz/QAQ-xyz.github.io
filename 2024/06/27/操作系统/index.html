@@ -1,0 +1,1152 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/start.png">
+  <link rel="icon" href="/img/start.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#525062">
+  <meta name="author" content="xiaoyuzi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="操作系统常见知识点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统">
+<meta property="og:url" content="http://example.com/2024/06/27/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="xyz_blog">
+<meta property="og:description" content="操作系统常见知识点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/06/27/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/image-20231212142116596.png">
+<meta property="og:image" content="http://example.com/2024/06/27/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/image-20231213192034154.png">
+<meta property="article:published_time" content="2024-06-27T13:14:46.019Z">
+<meta property="article:modified_time" content="2024-06-27T13:16:11.137Z">
+<meta property="article:author" content="xiaoyuzi">
+<meta property="article:tag" content="嵌入式">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/06/27/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/image-20231212142116596.png">
+  
+  
+  
+  <title>操作系统 - xyz_blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>小宇子_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/b.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="操作系统"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-27 21:14" pubdate>
+          2024年6月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          17k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          140 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">操作系统</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h1><h2 id="何为进程和线程"><a href="#何为进程和线程" class="headerlink" title="何为进程和线程"></a>何为进程和线程</h2><ul>
+<li><p>进程</p>
+<p>是<strong>资源分配</strong>的最小单位，它是程序执行时的一个实例，在程序运行时创建</p>
+</li>
+<li><p>线程</p>
+<p>是<strong>程序执行</strong>的最小单位，也是<strong>处理器调度</strong>的基本单位，是进程的一个执行流，<strong>一个进程由多个线程组成的</strong></p>
+</li>
+</ul>
+<h2 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h2><ul>
+<li><p><strong>进程有自己的独立地址空间</strong>，每启动一个进程，系统就会为它分配地址空间，建立数据表来维护代 码段、堆栈段和数据段，这种操作非常昂贵；而<strong>线程是共享进程中的数据</strong>，<strong>使用相同的地址空间</strong>， 因此，CPU切换一个线程的花费远比进程小很多，同时创建一个线程的开销也比进程小很多</p>
+</li>
+<li><p><strong>线程之间的通信更方便</strong>，同一进程下的线程共享全局变量、静态变量等数据，而<strong>进程之间的通信需 要以通信的方式（IPC）进行</strong>。不过如何处理好同步与互斥是编写多线程程序的难点。但是<strong>多进程程序更健壮</strong>，<strong>多线程程序只要有一个线程死掉，整个进程也跟着死掉了，而一个进程死掉并不会对另 外一个进程造成影响，因为进程有自己独立的地址空间</strong>**</p>
+</li>
+<li><p><strong>进程切换时，消耗的资源大，效率低</strong>。所以涉及到频繁的切换时，使用线程要好于进程。同样如果 要求同时进行并且又要共享某些变量的并发操作，只能用线程不能用进程</p>
+</li>
+<li><p>执行过程：<strong>每个独立的进程有一个程序运行的入口、顺序执行序列和程序入口</strong>。但是<strong>线程不能独立执行</strong>，必须依存在应用程序中，由应用程序提供多个线程执行控制。</p>
+</li>
+<li><p><strong>线程执行开销小，但是不利于资源的管理和保护</strong>。线程适合在SMP机器（双CPU系统）上运行。进<strong>程执行开销大，但是能够很好的进行资源管理和保护</strong>，可以跨机器迁移。</p>
+</li>
+</ul>
+<h2 id="何时使用多进程，何时使用多线程？"><a href="#何时使用多进程，何时使用多线程？" class="headerlink" title="何时使用多进程，何时使用多线程？"></a>何时使用多进程，何时使用多线程？</h2><p>对资源的管理和保护要求高，不限制开销和效率时，使用<strong>多进程</strong>。 </p>
+<p>要求效率高，频繁切换时，资源的保护管理要求不是很高时，使用<strong>多线程</strong>。</p>
+<h2 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h2><p><img src="/2024/06/27/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/image-20231212142116596.png" srcset="/img/loading.gif" lazyload alt="image-20231212142116596"></p>
+<ul>
+<li><p>创建态</p>
+<p>一个应用程序从系统上启动，首先就是进入创建状态，需要获取系统资源创建进程管理块（PCB： Process Control Block）完成资源分配</p>
+</li>
+<li><p>就绪态</p>
+<p>在创建状态完成之后，进程已经准备好，但是还未获得处理器资源，无法运行</p>
+</li>
+<li><p>运行态</p>
+<p>获取处理器资源，被系统调度，开始进入运行状态。如果进程的时间片用完了就进入就绪状态</p>
+</li>
+<li><p>阻塞态</p>
+<p>在运行状态期间，如果进行了阻塞的操作，如耗时的I&#x2F;O操作，此时进程暂时无法操作就进入到了阻塞状 态，在这些操作完成后就进入就绪状态</p>
+</li>
+<li><p>终止态</p>
+<p>进程结束或者被系统终止，进入终止状态</p>
+</li>
+</ul>
+<h2 id="linux创建进程的方式"><a href="#linux创建进程的方式" class="headerlink" title="linux创建进程的方式"></a>linux创建进程的方式</h2><ul>
+<li><p><strong>fork创建</strong></p>
+<p>⼀个进程时，⼦进程只是完全复制⽗进程的资源，复制出来的⼦进程 有⾃⼰的t ask_struct结构和pi d, 但却复制⽗进程其它所有的资源。 </p>
+</li>
+<li><p><strong>vfork创建：</strong></p>
+<p>系统调⽤不同于fork，⽤vfork创建的⼦进程与⽗进程共享地址空间， 也就是说⼦进程完全运⾏在⽗进程的地址空间上，如果这时⼦进程修改了某个变量， 这将影响到⽗进程 </p>
+</li>
+<li><p><strong>clone（）是带有参数的</strong></p>
+</li>
+</ul>
+<p><strong>fork( ) 是全部复制，vfor k( ) 是共享内存，⽽clone( ) 是则可以将⽗进程资源有选择地复制给⼦进程</strong></p>
+<h2 id="进程间的通信方式以及特点"><a href="#进程间的通信方式以及特点" class="headerlink" title="进程间的通信方式以及特点"></a>进程间的通信方式以及特点</h2><ul>
+<li><p>管道（pipe ）</p>
+<ul>
+<li><p>管道（无名管道）</p>
+<p>这种通讯方式<strong>有两种限制</strong>，<strong>一是</strong>半双工的通信，数据只能单向流动，<strong>二是</strong>只能在具有亲缘关系的进程间使用。进程的亲缘关系通常是指父子进程关系</p>
+</li>
+<li><p>流管道（s_pipe）</p>
+<p>去除了第一种限制,<strong>可以双向传输</strong>（全双工）</p>
+</li>
+<li><p>命名管道（FIFO）</p>
+<p>克服了管道没有名字的限制，因此，除 具有管道所具有的功能外，它还<strong>允许无亲缘关系进程间的通信</strong></p>
+</li>
+</ul>
+</li>
+<li><p>信号量（semaphore）</p>
+<p>信号量是一个<strong>计数器</strong>，可以用来<strong>控制多个进程对共享资源的访问</strong>。它常作为一种<strong>锁机制</strong>，防止某进程正在访问共享资源时，其他进程也访问该资源。因此，主要作为<strong>进程间</strong>以及<strong>同一进程内不同线程之间</strong>的同步手段</p>
+</li>
+<li><p>消息队列（message queue）</p>
+<p><strong>消息队列是由消息组成的链表</strong>，存放在内核中并由消息队列标识符标识。</p>
+<p>消息队列是消息的链接表，包括Posix消息队列system V消息队列。有足够权限的进程可以向队列中添加 消息，被赋予读权限的进程则可以读走队列中的消息。消息队列克服了信号承载信息量少，管道只能承 载无格式字节流以及缓冲区大小受限等缺点。</p>
+<p>息发送后可以⽴即返回，有消息系统来确保信息的可靠专递，消息发布者只管把消息发布到MQ中⽽不管谁来取， 消息使⽤者只管从MQ中取消息⽽不管谁发布的，这样发布者和使⽤者都不⽤知道对⽅的存在。</p>
+</li>
+<li><p>信号</p>
+<p>信号是通讯⽅式，信号量是⼀个计数器，限制资源访问线程的数</p>
+<p>信号是一种比较复杂的通信方式，用于<strong>通知接收进程某个事件已经发生</strong>。主要作为进程间以及同一进程 不同线程之间的同步手段。</p>
+</li>
+<li><p>共享内存</p>
+<p>共享内存就是映射一段能被其他进程所访问的内存，这段共享内存由一个进程创建，但多个进程都可以 访问。共享内存是最快的 IPC 方式，它是针对其他进程间通信方式运行效率低而专门设计的。它往往与 其他通信机制，如信号量，配合使用，来实现进程间的同步和通信</p>
+</li>
+<li><p>套字节</p>
+<p>套解字也是一种进程间通信机制，与其他通信机制不同的是，它可用于不同机器间的进程通信</p>
+<p>由I P地址可以唯⼀确定⼀台主机，但是准确来说，⽹络通讯中的双⽅并不是主机，⽽是运⾏在主机上的进程， 这样就需要进⼀步确定是主机中的哪个进程要进⾏⽹络通讯。因此，除了I P地址之外，还需要端⼝号来唯⼀确定主机中的通讯进程。 I P地址和端⼝号就构成了⼀个⽹络中的唯⼀标识符，即套接字</p>
+</li>
+</ul>
+<p><strong>各通信方式的比较和优缺点：</strong></p>
+<ul>
+<li>管道 ：速度慢，容量有限，只有父子进程能通讯</li>
+<li>FIFO ：任何进程间都能通讯，但速度慢。</li>
+<li>消息队列 ：容量受到系统限制，且要注意第一次读的时候，要考虑上一次没有读完数据的问题，消息队列可以不再 局限于父子进程，而允许任意进程通过共享消息队列来实现进程间通信，并由系统调用函数来实现消息 发送和接收之间的同步，从而使得用户在使用消息缓冲进行通信时不再需要考虑同步问题，使用方便， 但是<strong>信息的复制需要额外消耗CPU的时间，不适宜于信息量大或操作频繁的场合</strong>。此种方法不太常用</li>
+<li>信号量 ：不能用来传递复杂消息，只能用来同步</li>
+<li>共享内存：利用内存缓冲区直接交换信息，无须复制，快捷、信息量大是其优点。共享内存块提供了在任意数量的 进程之间进行高效双向通信的机制。每个使用者都可以读取写入数据，但是所有程序之间必须达成并遵 守一定的协议，以防止诸如在读取信息之前覆写内存空间等竞争状态的出现</li>
+</ul>
+<p><strong>进程间通信方式的选择</strong>：</p>
+<p>PIPE和FIFO(有名管道)用来实现进程间相互发送非常短小的、频率很高的消息，这两种方式通常适用于 <strong>两个进程间</strong>的通信。</p>
+<p>共享内存用来实现进程间共享的、非常庞大的、读写操作频率很高的数据；这种方法适用于<strong>多进程间</strong>的 通信。</p>
+<p>其他考虑用socket。主要应用在分布式开发中</p>
+<h2 id="线程间的同步方式"><a href="#线程间的同步方式" class="headerlink" title="线程间的同步方式"></a>线程间的同步方式</h2><p>现在流行的进程线程同步互斥的控制机制，其实是由最原始、最基本的4种方法（临界区、互斥量、信号 量和事件）实现的</p>
+<ul>
+<li><p>临界区</p>
+<p>通过对多线程的串行化来访问公共资源或一段代码，速度快，适合控制数据访问。在任意 时刻只允许一个线程访问共享资源，如果有多个线程试图访问共享资源，那么当有一个线程进入 后，其他试图访问共享资源的线程将会被挂起，并一直等到进入临界区的线程离开，临界在被释放 后，其他线程才可以抢占</p>
+</li>
+<li><p>互斥量</p>
+<p>为协调对一个共享资源的单独访问而设计，只有拥有互斥量的线程，才有权限去访问系统 的公共资源，因为互斥量只有一个，所以能够保证资源不会同时被多个线程访问。互斥不仅能实现 同一应用程序的公共资源安全共享，还能实现不同应用程序的公共资源安全共享</p>
+</li>
+<li><p>信号量</p>
+<p>为控制一个具有有限数量的用户资源而设计。它允许多个线程在同一个时刻去访问同一个 资源，但一般需要限制同一时刻访问此资源的最大线程数目</p>
+</li>
+<li><p>事件</p>
+<p>用来通知线程有一些事件已发生，从而启动后继任务的开始</p>
+</li>
+</ul>
+<h2 id="内核线程和用户线程"><a href="#内核线程和用户线程" class="headerlink" title="内核线程和用户线程"></a>内核线程和用户线程</h2><ul>
+<li><p>内核线程</p>
+<p>由操作系统内核创建和撤销。内核维护进程及线程的上下文信息以及线程切换。一个内核线 程由于I&#x2F;O操作而阻塞，不会影响其它线程的运行</p>
+</li>
+<li><p>用户线程、</p>
+<p>不需要内核支持而在用户程序中实现的线程，其不依赖于操作系统核心，应用进程利用线程库提供创建、同步、调度和管理线程的函数来控制用户线程。不需要用户态&#x2F;核心态切换，速度快，操作 系统内核不知道多线程的存在，因此一个线程阻塞将使得整个进程（包括它的所有线程）阻塞。由于这 里的处理器时间片分配是以进程为基本单位，所以每个线程执行的时间相对减少</p>
+</li>
+</ul>
+<h2 id="内核线程和用户线程的优缺点"><a href="#内核线程和用户线程的优缺点" class="headerlink" title="内核线程和用户线程的优缺点"></a>内核线程和用户线程的优缺点</h2><ol>
+<li>内核支持线程是OS内核可感知的，而用户级线程是OS内核不可感知的。 </li>
+<li>用户级线程的创建、撤消和调度不需要OS内核的支持，是在语言（如Java）这一级处理的；而内核 支持线程的创建、撤消和调度都需OS内核提供支持，而且与进程的创建、撤消和调度大体是相同 的。 </li>
+<li>用户级线程执行系统调用指令时将导致其所属进程被中断，而内核支持线程执行系统调用指令时， 只导致该线程被中断。 </li>
+<li>在只有<strong>用户级线程的系统</strong>内，CPU调度还是以进程为单位，处于运行状态的进程中的多个线程，由 用户程序控制线程的轮换运行；在有<strong>内核支持线程的系统</strong>内，CPU调度则以线程为单位，由OS的线 程调度程序负责线程的调度。 </li>
+<li>用户级线程的程序实体是运行在用户态下的程序，而内核支持线程的程序实体则是可以运行在任何 状态下的程序。</li>
+</ol>
+<p><strong>内核线程的优点：</strong> 当有多个处理机时，一个进程的多个线程可以同时执行。</p>
+<p><strong>内核线程的缺点：</strong> 由内核进行调度。</p>
+<p><strong>用户线程的优点：</strong></p>
+<ol>
+<li>线程的调度不需要内核直接参与，控制简单。 </li>
+<li>可以在不支持线程的操作系统中实现。 </li>
+<li>创建和销毁线程、线程切换代价等线程管理的代价比内核线程少得多。 </li>
+<li>允许每个进程定制自己的调度算法，线程管理比较灵活。这就是必须自己写管理程序，与内核线程 的区别 </li>
+<li>线程能够利用的表空间和堆栈空间比内核级线程多。 </li>
+<li>同一进程中只能同时有一个线程在运行，如果有一个线程使用了系统调用而阻塞，那么整个进程都 会被挂起。另外，页面失效也会产生同样的问题。</li>
+</ol>
+<p><strong>用户线程的缺点：</strong>资源调度按照进程进行，多个处理机下，同一个进程中的线程只能在同一个处理机下分时复用</p>
+<h2 id="僵尸进程、孤儿进程、守护进程"><a href="#僵尸进程、孤儿进程、守护进程" class="headerlink" title="僵尸进程、孤儿进程、守护进程"></a>僵尸进程、孤儿进程、守护进程</h2><ul>
+<li><p>僵尸进程</p>
+<p>是 一个进程使用fork创建子进程，如果子进程退出，而父进程并没有调用wait或waitpid获取子 进程的状态信息，那么子进程的进程描述符仍然保存在系统中。这种进程称之为僵死进程</p>
+<p>fork的本质，就是复制，把当前进程复制⼀份，然后两个进程并发地执⾏for k后⾯的语句，</p>
+</li>
+<li><p>孤儿进程</p>
+<p>⽗进程结束了，⽽它的⼀个或多个⼦进程还在运⾏，那么这些⼦进程就成为孤⼉进程(fat her di ed) 。⼦进程的资源由init进程( 进程号PID &#x3D; 1) 回收</p>
+</li>
+<li><p>守护进程</p>
+<p>建守护进程时有意把父进程结束，然后被1号进程init收养</p>
+<p>是运⾏在后台的⼀种特殊进程。它独⽴于控制终端并且周期性地执⾏某种任务或等待处理某些发⽣的事件</p>
+</li>
+</ul>
+<p><strong>区分：</strong> 一个正常运行的子进程，如果此刻子进程退出，父进程没有及时调用wait或waitpid收回子进程 的系统资源，该进程就是僵尸进程，如果系统收回了，就是正常退出，如果一个正常运行的子进程，父 进程退出了但是子进程还在，该进程此刻是孤儿进程，被init收养，如果父进程是故意被杀掉，子进程做 相应处理后就是守护进程</p>
+<h2 id="僵尸进程的危害"><a href="#僵尸进程的危害" class="headerlink" title="僵尸进程的危害"></a>僵尸进程的危害</h2><p>在进程退出的时候，内核释放该进程所有的资源，包括打开的文件，占用的内存等。但是仍然为其保留 一定的信息(包括进程号 PID，退出状态 the termination status of the process，运行时间 the amount  of CPU time taken by the process 等)。直到父进程通过 wait &#x2F; waitpid 来取时才释放。 </p>
+<p>如果进程不调用 wait &#x2F; waitpid 的话， 那么保留的那段信息就不会释放，其进程号就会一直被占用，但 是系统所能使用的进程号是有限的，<strong>如果大量的产生僵死进程，将因为没有可用的进程号而导致系统不 能产生新的进程</strong></p>
+<h2 id="如何清理僵尸进程"><a href="#如何清理僵尸进程" class="headerlink" title="如何清理僵尸进程"></a>如何清理僵尸进程</h2><p>僵尸进程的产生是因为父进程没有 wait() 子进程。所以如果我们自己写程序的话一定要在父进程中通过  wait() 来避免僵尸进程的产生</p>
+<p>当系统中出现了僵尸进程时，我们是无法通过 kill 命令把它清除掉的。但是我们可以杀死它的父进程， 让它变成孤儿进程，并进一步被系统中管理孤儿进程的进程收养并清理。</p>
+<p>1.kill 杀死元凶⽗进程( ⼀般不⽤) 严格的说，僵⼫进程并不是问题的根源，罪魁祸⾸是产⽣⼤量僵死进程的⽗进程。 因此，我们可以直接除掉元凶，通过ki l l 发送SI GTERM或者SI GKI LL信号。元凶死后，僵⼫进程进程变成孤⼉进程，由i ni t充当⽗进程，并回收资源。 或者运⾏：ki l l -9 ⽗进程的pi d值</p>
+<p>2.⽗进程⽤wai t或wai tpi d去回收资源( ⽅案不好) ⽗进程通过wai t或wai tpi d等函数去等待⼦进程结束，但是不好，会导致⽗进程⼀直等待被挂起，相当于⼀个进程在⼲活，没有起到多进程的作⽤。 </p>
+<p>3.通过信号机制，在处理函数中调⽤wai t，回收资源 通过信号机制，⼦进程退出时向⽗进程发送SI GCHLD信号，⽗进程调⽤si gnal ( SI GCHLD, si g_chi l d) 去处理SI GCHLD信号， 在信号处理函数si g_chi l d( ) 中调⽤wai t进⾏处理僵⼫进程。什么时候得到⼦进程信号，什么时候进⾏信号处理，⽗进程可以继续⼲其他活，不⽤去阻塞等待。</p>
+<h2 id="如何唤醒被阻塞的socket线程"><a href="#如何唤醒被阻塞的socket线程" class="headerlink" title="如何唤醒被阻塞的socket线程"></a>如何唤醒被阻塞的socket线程</h2><ul>
+<li><p>同步阻塞</p>
+<p>等待锁的释放</p>
+</li>
+<li><p>等待阻塞</p>
+<ul>
+<li>使用Thread.sleep造成的阻塞:时间结束后自动进入RUNNABLE状态 </li>
+<li>使用Thread.wait造成的阻塞:使用Thread.notify或者Thread.notifyAll唤醒 </li>
+<li>使用Thread.join造成的阻塞:等待上一个线程执行完后自动进入RUNNABLE状态 </li>
+<li>使用Thread.suspend造成的阻塞:使用Thread.resum唤醒 </li>
+<li>使用LockSupport.park造成的阻塞:使用LockSupport.unpark唤醒 </li>
+<li>使用LockSupport.parkNanos造成的阻塞:指定时间结束后，自动唤醒 </li>
+<li>使用LockSupport.parkUntil造成的阻塞:到达指定的时间，自动唤醒</li>
+</ul>
+</li>
+</ul>
+<h2 id="确定当前线程是繁忙还是阻塞"><a href="#确定当前线程是繁忙还是阻塞" class="headerlink" title="确定当前线程是繁忙还是阻塞"></a>确定当前线程是繁忙还是阻塞</h2><p>使用ps命令查看</p>
+<h2 id="空闲和阻塞的进程会在唤醒的时候判误吗"><a href="#空闲和阻塞的进程会在唤醒的时候判误吗" class="headerlink" title="空闲和阻塞的进程会在唤醒的时候判误吗"></a>空闲和阻塞的进程会在唤醒的时候判误吗</h2><p>不会。每个进程有个进程控制块PCB，两种状态的进程分别处于两种队列。唤醒应该是找阻塞队列的进 程</p>
+<h2 id="就绪态的进程在等待什么"><a href="#就绪态的进程在等待什么" class="headerlink" title="就绪态的进程在等待什么"></a>就绪态的进程在等待什么</h2><p>被调度使用cpu的运行权</p>
+<h2 id="如何实现线程池"><a href="#如何实现线程池" class="headerlink" title="如何实现线程池"></a>如何实现线程池</h2><ol>
+<li>设置一个生产者消费者队列，作为临界资源 </li>
+<li>初始化n个线程，并让其运行起来，加锁去队列取任务运行 </li>
+<li>当任务队列为空的时候，所有线程阻塞 </li>
+<li>当生产者队列来了一个任务后，先对队列加锁，把任务挂在到队列上，然后使用条件变量去通知阻 塞中的一个线程</li>
+</ol>
+<h2 id="fork和vfork"><a href="#fork和vfork" class="headerlink" title="fork和vfork"></a>fork和vfork</h2><p><strong>fork的基础知识：</strong></p>
+<p>创建一个和当前进程映像一样的进程可以通过fork( )系统调用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">fork</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>成功调用fork( )会创建一个新的进程，它几乎与调用fork( )的进程一模一样，这两个进程都会继续 运行。在子进程中，成功的fork( )调用会返回0。在父进程中fork( )返回子进程的pid。如果出现错 误，fork( )返回一个负值</strong>。 最常见的fork( )用法是创建一个新的进程，然后使用exec( )载入二 进制映像，替换当前进程的映像。这种情况下，派生（fork）了新的进程，而这个子进程会执行一 个新的二进制可执行文件的映像。这种“派生加执行”的方式是很常见的。 在早期的Unix系统 中，创建进程比较原始。当调用fork时，内核会把所有的内部数据结构复制一份，复制进程的页表 项，然后把父进程的地址空间中的内容逐页的复制到子进程的地址空间中。但从内核角度来说，逐 页的复制方式是十分耗时的。现代的Unix系统采取了更多的优化，例如Linux，采用了写时复制的 方法，而不是对父进程空间进程整体复制。</p>
+<p><strong>vfork的基础知识：</strong></p>
+<p>在实现写时复制之前，Unix的设计者们就一直很关注在fork后立刻执行exec所造成 的地址空间的浪费。BSD的开发者们在3.0的BSD系统中引入了vfork( )系统调用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">vfork</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p>除了子进程必须要立刻执行一次对exec的系统调用，或者调用_exit( )退出，对vfork( )的成功调用 所产生的结果和fork( )是一样的。vfork( )会挂起父进程直到子进程终止或者运行了一个新的可执行 文件的映像。通过这样的方式，vfork( )避免了地址空间的按页复制。在这个过程中，父进程和子 进程共享相同的地址空间和页表项。实际上vfork( )只完成了一件事：复制内部的内核数据结构。 因此，子进程也就不能修改地址空间中的任何内存。 vfork( )是一个历史遗留产物，Linux本 不应该实现它。需要注意的是，即使<strong>增加了写时复制，</strong>vfork( )也要比fork( )快，因为它没有进行页 表项的复制。然而，写时复制的出现减少了对于替换fork( )争论。实际上，直到2.2.0内核，vfork(  )只是一个封装过的fork( )。因为对vfork( )的需求要小于fork( )，所以vfork( )的这种实现方式是可 行的。 </p>
+<p><strong>fork和vfork的区别：</strong> </p>
+<ol>
+<li>fork( )的子进程拷贝父进程的数据段和代码段；vfork( )的子进程与父进程共享数据段 </li>
+<li>fork( )的父子进程的执行次序不确定；vfork( )保证子进程先运行，在调用exec或exit之前与父进程 数据是共享的，在它调用exec或exit之后父进程才可能被调度运行。 </li>
+<li>vfork( )保证子进程先运行，在它调用exec或exit之后父进程才可能被调度运行。如果在调用这两个 函数之前子进程依赖于父进程的进一步动作，则会导致死锁。  </li>
+<li>当需要改变共享数据段中变量的值，则拷贝父进程。</li>
+</ol>
+<h2 id="server端监听端口，此时进程处于什么状态"><a href="#server端监听端口，此时进程处于什么状态" class="headerlink" title="server端监听端口，此时进程处于什么状态"></a>server端监听端口，此时进程处于什么状态</h2><p>最普通的Server模型，则处于阻塞状态；如果使用IO复用中epoll、select等，则处于运行状态</p>
+<h2 id="阻塞态和挂起态"><a href="#阻塞态和挂起态" class="headerlink" title="阻塞态和挂起态"></a>阻塞态和挂起态</h2><p>线程在运⾏的过程中因为某些原因⽽发⽣阻塞，阻塞状态的线程的特点是：该线程放弃CPU的使⽤， 暂停运⾏，只有等到导致阻塞的原因消除之后才回复运⾏。或者是被其他的线程中断，该线程也会退出阻塞状态. 正在执⾏的进程由于发⽣某时间（如I &#x2F;O请求、申请缓冲区失败等）暂时⽆法继续执⾏。此时引起进程调度， OS把处理机分配给另⼀个就绪进程，⽽让受阻进程处于暂停状态，⼀般将这种状态称为阻塞状态。</p>
+<p>挂起进程在操作系统中可以定义为暂时被淘汰出内存的进程，机器的资源是有限的，在资源不⾜的情况下， 操作系统对在内存中的程序进⾏合理的安排，其中有的进程被暂时调离出内存，当条件允许的时候，会被操作系统再次调回内存， 重新进⼊等待被执⾏的状态即就绪态</p>
+<p>共同点： 1. 进程都暂停执⾏ 2. 进程都释放CPU，即两个过程都会涉及上下⽂切换</p>
+<h1 id="堆和栈"><a href="#堆和栈" class="headerlink" title="堆和栈"></a>堆和栈</h1><h2 id="代码段、数据段、bss段、堆、栈"><a href="#代码段、数据段、bss段、堆、栈" class="headerlink" title="代码段、数据段、bss段、堆、栈"></a>代码段、数据段、bss段、堆、栈</h2><ul>
+<li><p><strong>代码段</strong></p>
+<p>代码段通常用来存放程序<strong>执行代码</strong>的一块区域。这部分区域的大小在程序运行前就已经确定了，通常这块内存区域属于只读，有些架构也允许可写，在代码段中也有可能包含以下只读的常数变量，例如字符串常量等。程序段为程序代码在内存中映射一个程序可以在内存中有多个副本</p>
+</li>
+<li><p><strong>数据段</strong></p>
+<p>数据段通常用来存放程序中<strong>已初始化的全局变量和已初始化为非0的静态变量</strong>的一块内存区域，属于静态内存分配。直观理解就是C语言程序中的全局变量（注意：<strong>全局变量才算是程序的数据， 局部变量不算程序的数据，只能算是函数的数据</strong>）</p>
+</li>
+<li><p><strong>bss段</strong></p>
+<p>bss段通常是指用来存放程序中<strong>未初始化的全局变量和未初始化的静态变量或者初始化为0的静 态变量</strong>一块区域。bss英文Block started by symbol，bss属于静态内存分配。bss段的特点就是被初始 化为0，<strong>bss段本质上也是属于数据段</strong>，bss段就是被初始化为0的数据段。 注意区分</p>
+<p><strong>数据段（.data）和bss段的区别和联系：</strong>二者本来没有本质区别，都是用来存放C程序中的全局变量的。区别在于把显示初始化为非零的全局变量存在**.data段<strong>中，而把显式初始化为0或者并未显式 初始化（C语言规定未显式初始化的全局变量值默认为0）的全局变量存在</strong>bss段**</p>
+</li>
+<li><p><strong>堆</strong></p>
+<p>堆是用来存放进程中被动态分配的内存段，它的大小并不固定，可动态扩张或缩减。当进程调用 malloc等函数分配内存时，新分配的内存就被动态分配到堆上，当利用free等函数释放内存时，被释放 的内存从堆中被剔除</p>
+</li>
+<li><p><strong>栈</strong></p>
+<p>栈又称堆栈，是用户存放程序临时创建的变量，也就是我们函数{}中定义的变量，但不包括static声 明的变量，static意味着在数据段中存放变量。除此之外，在函数被调用时，其参数也会被压入发起调用 的进程栈中，并且待到调用结束后，函数的返回值也会被存放回栈中，由于栈的先进后出特点，所以栈 特别方便用来保存、恢复调用现场。从这个意义上讲，我们可以把堆栈看成一个寄存，交换临时数据的 内存区</p>
+</li>
+</ul>
+<h2 id="为什么堆的空间不连续"><a href="#为什么堆的空间不连续" class="headerlink" title="为什么堆的空间不连续"></a>为什么堆的空间不连续</h2><p>堆包含一个链表来维护已用和空闲的内存块。在堆上新分配（用 new 或者 malloc）内存是从空闲的内 存块中找到一些满足要求的合适块。所以可能让人觉得只要有很多不连续的零散的小区域，只要总数达 到申请的内存块，就可以分配。</p>
+<p>但事实上是不行的，这又让人觉得是不是零散的内存块不能连接成一个大的空间，而必须要一整块连续 的内存空间才能申请成功呢</p>
+<p>申请和释放许多小的块可能会产生如下状态：在已用块之间存在很多小的空闲块。进而申请大块内存失 败，虽然空闲块的总和足够，但是<strong>空闲的小块是零散的，不连续的</strong>，不能满足申请的大小，这叫做“堆碎 片”</p>
+<p>当旁边有空闲块的已用块被释放时，新的空闲块会与相连的空闲块合并成一个大的空闲块，这样就可以 有效的减少”堆碎片”的产生</p>
+<p><strong>堆分配的空间在逻辑地址（虚拟地址）上是连续的，但在物理地址上是不连续的</strong>（因为采用了页式内存 管理,windows下有段机制、分页机制），如果逻辑地址空间上已经没有一段连续且足够大的空间，则分 配内存失败</p>
+<h2 id="用户栈和内核栈"><a href="#用户栈和内核栈" class="headerlink" title="用户栈和内核栈"></a>用户栈和内核栈</h2><ul>
+<li><p>内核栈、</p>
+<p>内存中属于操作系统空间的一块区域</p>
+<p>作用：</p>
+<pre><code class="hljs">1. 保存中断现场，对于嵌套中断，被中断程序的现场信息一次压入系统栈，中断返回时逆序弹出
+
+2. 保存操作系统程序相互调用的参数，返回值，以及函数的局部变量
+</code></pre>
+</li>
+<li><p>用户栈</p>
+<p>用户进程空间的一块区域，用于保存用户空间子程序间调用的参数，返回值以及局部变量。</p>
+</li>
+</ul>
+<h2 id="为什么用户栈和内核栈不能共用一个栈"><a href="#为什么用户栈和内核栈不能共用一个栈" class="headerlink" title="为什么用户栈和内核栈不能共用一个栈"></a>为什么用户栈和内核栈不能共用一个栈</h2><ol>
+<li>如果只用系统栈，系统栈一般大小有限，用户程序调用次数可能很多。如果中断有16个优先级，那 么系统栈一般大小为15（只需保存15个低优先级中断，另一个高优先级中断在运行）用户程序调用 次数很多，那样15次子程序调用以后的子程序的参数，返回值，局部变量就不能保存，用户程序也 就不能正常运行。</li>
+<li>如果只用用户栈，系统程序需要在某种保护下运行，而用户栈在用户空间不能提供相应的保护措 施</li>
+</ol>
+<h2 id="线程是否有相同的堆栈"><a href="#线程是否有相同的堆栈" class="headerlink" title="线程是否有相同的堆栈"></a>线程是否有相同的堆栈</h2><p>真正的程序执行都是线程来完成的，程序启动的时候操作系统就帮你创建了一个主线程。 每个线程有自己的堆栈</p>
+<h1 id="并发和互斥"><a href="#并发和互斥" class="headerlink" title="并发和互斥"></a>并发和互斥</h1><h2 id="并发和互斥如何实现"><a href="#并发和互斥如何实现" class="headerlink" title="并发和互斥如何实现"></a>并发和互斥如何实现</h2><p>并发，指的是多个执行单元同时、并行被执行，而并发的执行单元对共享资源（硬件资源和软件上的全 局变量、静态变量等）的访问则很容易导致竞态</p>
+<p>解决竞态问题的途径是保证对共享资源的互斥访问，所谓互斥访问就是指一个执行单元在访问共享资源 的时候，其他的执行单元都被禁止访问</p>
+<p>访问共享资源的代码区域被称为临界区，临界区需要以某种互斥机制加以保护。中断屏蔽，原子操作， 自旋锁，和信号量都是linux设备驱动中可采用的互斥途径</p>
+<h2 id="自旋锁、信号量"><a href="#自旋锁、信号量" class="headerlink" title="自旋锁、信号量"></a>自旋锁、信号量</h2><ul>
+<li><p><strong>自旋锁</strong></p>
+<p>自旋锁，顾名思义，我们可以把他理解成厕所门上的一把锁。这个厕所门只有一把钥匙，当我们进去 时，把钥匙取下来，进去后反锁。那么当第二个人想进来，必须等我们出去后才可以。当第二个人在外 面等待时，可能会一直等待在门口转圈。 </p>
+<p>我们的自旋锁也是这样，自旋锁只有锁定和解锁两个状态。当我们进入拿上钥匙进入厕所，这就相当于 自旋锁锁定的状态，期间谁也不可以进来。当第二个人想要进来，这相当于线程B想要访问这个共享资 源，但是目前不能访问，所以线程B就一直在原地等待，一直查询是否可以访问这个共享资源。当我们 从厕所出来后，这个时候就“解锁”了，只有再这个时候线程B才能访问。 </p>
+<p>假如，在厕所的人待的时间太长怎么办？外面的人一直等待吗？如果换做是我们，肯定不会这样，简直 浪费时间，可能我们会寻找其他方法解决问题。自旋锁也是这样的，如果线程A<strong>持有自旋锁时间过长， 显然会浪费处理器的时间，降低了系统性能</strong>。我们知道CPU最伟大的发明就在于多线程操作，这个时候 让线程B在这里傻傻的不知道还要等待多久，显然是不合理的。因此，如果<strong>自旋锁只适合短期持有</strong>，如果遇到需要长时间持有的情况，我们就要换一种方式了（互斥体）</p>
+</li>
+<li><p><strong>信号量</strong></p>
+<p>信号量和自旋锁有些相似，不同的是信号量会发出一个信号告诉你还需要等多久。因此，不会出现傻傻 等待的情况。比如，有100个停车位的停车场，门口电子显示屏上实时更新的停车数量就是一个信号 量。这个停车的数量就是一个信号量，他告诉我们是否可以停车进去。当有车开进去，信号量加一，当 有车开出来，信号量减一</p>
+<p>比如，厕所一次只能让一个人进去，当A在里面的时候，B想进去，如果是自旋锁，那么B就会一直在门 口傻傻等待。如果是信号量，A就会给B一个信号，你先回去吧，我出来了叫你。这就是一个信号量的例 子，B听到A发出的信号后，可以先回去睡觉，等待A出来</p>
+<p>因此，信号量显然可以提高系统的执行效率，避免了许多无用功。</p>
+</li>
+<li><p><strong>区别</strong></p>
+<ol>
+<li>由于争用信号量的进程在等待锁重新变为可用时会睡眠，所以信号量适用于锁会被长时间持有的情 况。 </li>
+<li>相反，锁被短时间持有时，使用信号量就不太适宜了，因为睡眠引起的耗时可能比锁被占用的全部 时间还要长。 </li>
+<li>由于执行线程在锁被争用时会睡眠，所以只能在进程上下文中才能获取信号量锁，因为在中断上下 文中（使用自旋锁）是不能进行调度的。 </li>
+<li>你可以在持有信号量时去睡眠（当然你也可能并不需要睡眠），因为当其它进程试图获得同一信号 量时不会因此而死锁，（因为该进程也只是去睡眠而已，而你最终会继续执行的）。 </li>
+<li>在你占用信号量的同时不能占用自旋锁，因为在你等待信号量时可能会睡眠，而在持有自旋锁时是 不允许睡眠的</li>
+<li>信号量锁保护的临界区可包含可能引起阻塞的代码，而自旋锁则绝对要避免用来保护包含这样代码 的临界区，因为阻塞意味着要进行进程的切换，如果进程被切换出去后，另一进程企图获取本自旋 锁，死锁就会发生。 </li>
+<li>信号量不同于自旋锁，它不会禁止内核抢占（自旋锁被持有时，内核不能被抢占），所以持有信号 量的代码可以被抢占，这意味着信号量不会对调度的等待时间带来负面影响</li>
+</ol>
+</li>
+</ul>
+<h2 id="自旋锁和信号量可以睡眠吗"><a href="#自旋锁和信号量可以睡眠吗" class="headerlink" title="自旋锁和信号量可以睡眠吗"></a>自旋锁和信号量可以睡眠吗</h2><p>自旋锁不能睡眠，信号量可以</p>
+<p>自旋锁自旋锁禁止处理器抢占；而信号量不禁止处理器抢占</p>
+<p>基于这个原因，如果自旋锁在锁住以后进入睡眠，由于不能进行处理器抢占，其他系统进程将都不能获 得CPU而运行，因此不能唤醒睡眠的自旋锁，因此系统将不响应任何操作（除了中断或多核的情况，下 面会讨论）。而信号量在临界区睡眠后，其他进程可以用抢占的方式继续运行，从而可以实现内存拷贝 等功能而使得睡眠的信号量程序由于获得了等待的资源而被唤醒，从而恢复了正常的代码运行</p>
+<p>当然，自旋锁的睡眠的情况包含考虑多核CPU和中断的因素。自旋锁睡眠时，只是当前CPU的睡眠以及 当前CPU的禁止处理器抢占，所以，如果存在多个CPU，那么其他活动的CPU可以继续运行使操作系统 功能正常，并有可能完成相应工作而唤醒睡眠了的自旋锁，从而没有造成系统死机；自旋锁睡眠时，如 果允许中断处理，那么中断的代码是可以正常运行的，但是中断通常不会唤醒睡眠的自旋锁，因此系统 仍然运行不正常</p>
+<h2 id="自旋锁和信号量可以用于中断中吗？"><a href="#自旋锁和信号量可以用于中断中吗？" class="headerlink" title="自旋锁和信号量可以用于中断中吗？"></a>自旋锁和信号量可以用于中断中吗？</h2><p>信号量不能用于中断中，因为信号量会引起休眠，<strong>中断不能休眠</strong></p>
+<p>自旋锁可以用于中断。在获取锁之前<strong>一定要先禁止本地中断</strong>（也就是本CPU中断，对于多核SOC来说会 有多个CPU核），否则可能导致锁死现象的发生</p>
+<h2 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h2><p>临界区的一个文件可以被<strong>同时读取</strong>，但是并不能被同时读和写。如果一个线程在读，另一个线程在 写，那么很可能会读取到错误的不完整的数据。读写自旋锁是可以<strong>允许对临界区的共享资源进行并发读操作的。但是并不允许多个线程并发读写操作</strong></p>
+<h2 id="产生死锁的原因"><a href="#产生死锁的原因" class="headerlink" title="产生死锁的原因"></a>产生死锁的原因</h2><p><strong>多个并发进程因争夺系统资源而产生相互等待的现象</strong>。即：一组进程中的每个进程都在等待某个事件发 生，而只有这组进程中的其他进程才能触发该事件，这就称这组进程发生了死锁。</p>
+<p>死锁: 是指多个线程因竞争资源⽽造成的⼀种僵局（互相等待）</p>
+<p><strong>产生死锁的本质原因为：</strong></p>
+<ol>
+<li>系统资源有限。 </li>
+<li>进程推进顺序不合理。</li>
+<li>信号量使⽤不当也会造成死锁。进程间彼此相互等待对⽅发来的消息，结果也会使得这 些进程间⽆法继续向前推进。例如， 进程A等待进程B发的消息，进程B⼜在等待进程A 发的消息，可以看出进程A和B不是因为竞争同⼀资源，⽽是在等待对⽅的资源导致死锁。</li>
+</ol>
+<h2 id="死锁的四个必要的条件"><a href="#死锁的四个必要的条件" class="headerlink" title="死锁的四个必要的条件"></a>死锁的四个必要的条件</h2><p>产⽣死锁必须同时满⾜以下四个条件，只要其中任⼀条件不成⽴，死锁就不会发⽣。</p>
+<ol>
+<li><strong>互斥</strong>：某种资源一次只允许一个进程访问，即该资源一旦分配给某个进程，其他进程就不能再访 问，直到该进程访问结束。</li>
+<li><strong>占有且等待</strong>：一个进程本身占有资源（一种或多种），同时还有资源未得到满足，正在等待其他进 程释放该资源。</li>
+<li><strong>不可抢占</strong>：别人已经占有了某项资源，你不能因为自己也需要该资源，就去把别人的资源抢过来。 </li>
+<li><strong>循环等待</strong>：存在一个进程链，使得每个进程都占有下一个进程所需的至少一种资源</li>
+</ol>
+<p>当以上四个条件均满足，必然会造成死锁，发生死锁的进程无法进行下去，它们所持有的资源也无 法释放。这样会导致CPU的吞吐量下降。所以死锁情况是会浪费系统资源和影响计算机的使用性能的。 那么，解决死锁问题就是相当有必要的了</p>
+<h2 id="死锁的处理方式"><a href="#死锁的处理方式" class="headerlink" title="死锁的处理方式"></a>死锁的处理方式</h2><p>死锁的处理方式主要从预防死锁、避免死锁、检测与解除死锁这四个方面来进行处理</p>
+<ul>
+<li><p>预防死锁</p>
+</li>
+<li><p>避免死锁</p>
+</li>
+<li><p>检测死锁</p>
+<p>首先为每个进程和每个资源指定一个唯一的号码；然后建立资源分配表和进程等待表</p>
+</li>
+<li><p>解除死锁</p>
+</li>
+</ul>
+<h2 id="如何避免死锁"><a href="#如何避免死锁" class="headerlink" title="如何避免死锁"></a>如何避免死锁</h2><ul>
+<li>加锁顺序（线程按照一定的顺序加锁）</li>
+<li>加锁时限（线程尝试获取锁的时候加上一定的时限，超过时限则放弃对该锁的请求，并释放自己占有的 锁）</li>
+<li>死锁检测</li>
+</ul>
+<h2 id="单核机器上写多线程程序是否需要加锁"><a href="#单核机器上写多线程程序是否需要加锁" class="headerlink" title="单核机器上写多线程程序是否需要加锁"></a>单核机器上写多线程程序是否需要加锁</h2><p>在单核机器上写多线程程序，仍然需要线程锁。因为线程锁通常用来实现线程的同步和通信。在单核机 器上的多线程程序，仍然存在线程同步的问题。因为在抢占式操作系统中，通常为每个线程分配一个时 间片，当某个线程时间片耗尽时，操作系统会将其挂起，然后运行另一个线程。如果这两个线程共享某 些数据，不使用线程锁的前提下，<strong>可能会导致共享数据修改引起冲突</strong></p>
+<h1 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h1><h2 id="1G的计算机中可以malloc-1-2G-吗"><a href="#1G的计算机中可以malloc-1-2G-吗" class="headerlink" title="1G的计算机中可以malloc(1.2G)吗"></a>1G的计算机中可以malloc(1.2G)吗</h2><p><strong>malloc能够申请的空间大小与物理内存的大小没有直接关系，仅与程序的虚拟地址空间相关</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;     <br>      <span class="hljs-type">char</span>*p;<br>       constunsigned k= <span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>*<span class="hljs-number">1.2</span>;    <br>       <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%x\n&quot;</span>,k);<br>       p= (<span class="hljs-type">char</span> *)<span class="hljs-built_in">malloc</span>( k );<br>       <span class="hljs-keyword">if</span>( p!=<span class="hljs-literal">NULL</span> )<br>              <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;OK&quot;</span>);<br>       <span class="hljs-keyword">else</span><br>              <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;error&quot;</span>);<br>       return0;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="malloc能申请多大的空间"><a href="#malloc能申请多大的空间" class="headerlink" title="malloc能申请多大的空间"></a>malloc能申请多大的空间</h2><p>malloc能够申请的空间到底能达到多大，还真是一个比较复杂的问题。想知道在一台机器上malloc能够 申请的最大空间到底是多少，可以使用下面的程序进行测试。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-type">unsigned</span> maximum = <span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span></span><br><span class="hljs-function"></span>&#123;<br>       unsignedblocksize[] = &#123;<span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>, <span class="hljs-number">1024</span>, <span class="hljs-number">1</span>&#125;;<br>       inti, count;<br>       <span class="hljs-type">void</span>* block;<br>       <span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-built_in">sizeof</span>(blocksize)/<span class="hljs-built_in">sizeof</span>(<span class="hljs-type">unsigned</span>); i++ )<br>       &#123;     <span class="hljs-keyword">for</span>( count = <span class="hljs-number">1</span>; ;count++ )<br>              &#123;     block = <span class="hljs-built_in">malloc</span>( maximum +blocksize[i]*count );<br>                     <span class="hljs-keyword">if</span>( block!=<span class="hljs-literal">NULL</span> ) &#123;<br>                            maximum= maximum + blocksize[i]*count;<br>                            <span class="hljs-built_in">free</span>(block );<br>                     &#125;<span class="hljs-keyword">else</span> &#123;<br>                            <span class="hljs-keyword">break</span>;<br>                     &#125;<br>              &#125;<br>       &#125;<br>       <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;maximummalloc size = %u bytes\n&quot;</span>, maximum);<br>       return0;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在当前正在使用的Windows环境中，可申请的最大空间超过1.9G。实际上，具体的数值会受到操作系统 版本、程序本身的大小、用到的动态&#x2F;共享库数量、大小、程序栈数量、大小等的影响，甚至每次运行的 结果都可能存在差异，因为有些操作系统使用了一种叫做随机地址分布的技术，使得进程的堆空间变 小。感兴趣的读者可以去研究操作系统中的相关内容</p>
+<h2 id="内存管理的方式"><a href="#内存管理的方式" class="headerlink" title="内存管理的方式"></a>内存管理的方式</h2><p>常见的内存管理方式有<strong>块式管理、页式管理、段式管理和段页式管理</strong>。最常用的是段页式管理。</p>
+<ul>
+<li><p>块式管理</p>
+<p>把主存分为一大块一大块的，当所需的程序片断不在主存时就分配一块主存空间，把程序片断载入主 存，就算所需的程序片段只有几个字节，也只能把这一块分配给它。这样会造成很大的浪费，平均浪费 了50%的内存空间，但是易于管理</p>
+</li>
+<li><p>页式管理</p>
+<p>用户程序的地址空间被划分成若干个固定大小的区域，这个区域被称为页”，相应地，内存空间也被划分 为若干个物理块，页和块的大小相等。可将用户程序的任一页放在内存的任一块中，从而实现了离散分 配。这种方式的优点是页的大小是固定的，因此便于管理；缺点是页长与程序的逻辑大小没有任何关 系。这就导致在某个时刻一个程序可能只有一部分在主存中，而另一部分则在辅存中。这不利于编程时 的独立性，并给换入换出处理、存储保护和存储共享等操作造成麻烦</p>
+</li>
+<li><p>段式管理</p>
+<p>段是按照程序的自然分界划分的并且长度可以动态改变的区域。使用这种方式，程序员可以把子程序、 操作数和不同类型的数据和函数划分到不同的段中。这种方式将用户程序地址空间分成若干个大小不等 的段，每段可以定义一组相对完整的逻辑信息。存储分配时，以段为单位，段与段在内存中可以不相邻 接，也实现了离散分配。</p>
+</li>
+</ul>
+<blockquote>
+<p>分页对程序员而言是不可见的，而分段通常对程序员而言是可见的，因而分段为组织程序和数据提 供了方便，但是对程序员的要求也比较高。 </p>
+<p>分段存储主要有如下优点： </p>
+<ol>
+<li>段的逻辑独立性不仅使其易于编译、管理、修改和保护，也便于多道程序共享。 </li>
+<li>段长可以根据需要动态改变，允许自由调度，以便有效利用主存空间。 </li>
+<li>方便分段共享、分段保护、动态链接、动态增长。</li>
+</ol>
+<p>分段存储的缺点如下： </p>
+<ol>
+<li>由于段的大小不固定，因此存储管理比较麻烦。 </li>
+<li>会生成段内碎片，这会造成存储空间利用率降低。而且段式存储管理比页式存储管理方式需 要更多的硬件支持。</li>
+</ol>
+<p>正是由于页式管理和段式管理都有各种各样的缺点，因此，为了把这两种存储方式的优点结合起 来，新引入了段页式管理。</p>
+</blockquote>
+<ul>
+<li><p>段页式管理</p>
+<p>段页式存储组织是分段式和分页式结合的存储组织方法，这样可充分利用分段管理和分页管理的优点。</p>
+<ol>
+<li>用分段方法来分配和管理虚拟存储器。程序的地址空间按逻辑单位分成基本独立的段，而每一段有 自己的段名，再把每段分成固定大小的若干页 </li>
+<li>用分页方法来分配和管理内存，即把整个主存分成与上述页大小相等的存储块，可装入作业的任何 一页。程序对内存的调入或调出是按页进行的，但它又可按段实现共享和保护</li>
+</ol>
+</li>
+</ul>
+<h2 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h2><p>虚拟内存简称虚存，是计算机系统内存管理的一种技术。它是相对于物理内存而言的，可以理解为“假 的”内存。它使得<strong>应用程序认为它拥有连续可用的内存（一个连续完整的地址空间）</strong>，允许程序员编写并 运行比实际系统拥有的内存大得多的程序，这使得许多大型软件项目能够在具有有限内存资源的系统上 实现。而实际上，它通常被分割成多个物理内存碎片，还有部分暂时存储在外部磁盘存储器上，在需要 时进行数据交换。</p>
+<p>相比实存，虚存有以下好处：</p>
+<ol>
+<li>扩大了地址空间。无论是段式虚存，还是页式虚存，或是段页式虚存，寻址空间都比实存大。 </li>
+<li>内存保护。每个进程运行在各自的虚拟内存地址空间，互相不能干扰对方。另外，虚存还对特定的 内存地址提供写保护，可以防止代码或数据被恶意篡改。 </li>
+<li>公平分配内存。采用了虚存之后，每个进程都相当于有同样大小的虚存空间。 </li>
+<li>当进程需要通信时，可采用虚存共享的方式实现不过，使用虚存也是有代价的，主要表现在以下几 个方面。<ol>
+<li>虚存的管理需要建立很多数据结构，这些数据结构要占用额外的内存</li>
+<li>虚拟地址到物理地址的转换，增加了指令的执行时间</li>
+<li>页面的换入换出需要磁盘IO，这是很耗时间的</li>
+<li>如果一页中只有一部分数据，会浪费内存</li>
+</ol>
+</li>
+</ol>
+<h2 id="内存碎片、内碎片、外碎片"><a href="#内存碎片、内碎片、外碎片" class="headerlink" title="内存碎片、内碎片、外碎片"></a>内存碎片、内碎片、外碎片</h2><ul>
+<li><p>内存碎片</p>
+<p>是由于多次进行内存分配造成的，当进行内存分配时，内存格式一般为：（用户使用段）（空 白段）（用户使用段），当空白段很小的时候，可能不能提供给用户足够多的空间，如夹在中间的空白 段的大小为5，而用户需要的内存大小为6，这样会产生很多的间隙，造成使用效率下降，这些很小的空 隙叫碎片</p>
+</li>
+<li><p>内碎片</p>
+<p>分配给程序的存储空间没有用完，有一部分是程序不使用，但其他程序也没法用的空间。内碎 片是处于区域内部或页面内部的存储块，占有这些区域或页面的进程并不使用这个存储块，而在进程占 有这块存储块时，系统无法利用它，直到进程释放它，或进程结束时，系统才有可能利用这个存储块</p>
+</li>
+<li><p>外碎片</p>
+<p>空间太小，小到无法给任何程序分配（不属于任何进程）的存储空间。外部碎片是出于任何已 分配区域或页面外部的空闲存储块，这些存储块的总和可以满足当前申请的长度要求，但是它们的地址 不连续或其他原因，使得系统无法满足当前申请</p>
+</li>
+</ul>
+<p>内碎片和外碎片是一对矛盾体，一种特定的内存分配算法，很难同时解决好内碎片和外碎片的问题，只 能根据应用特点进行取舍</p>
+<h2 id="虚拟地址、逻辑地址、线性地址、物理地址"><a href="#虚拟地址、逻辑地址、线性地址、物理地址" class="headerlink" title="虚拟地址、逻辑地址、线性地址、物理地址"></a>虚拟地址、逻辑地址、线性地址、物理地址</h2><ul>
+<li><p>虚拟地址</p>
+<p>是指由程序产生的由段选择符和段内偏移地址组成的地址。这两部分组成的地址并没有直接访 问物理内存，而是通过分段地址的变换处理后才会对应到相应的物理内存地址</p>
+</li>
+<li><p>逻辑地址</p>
+<p>由程序产生的段内偏移地址。有时直接把逻辑地址当成虚拟地址，两者并没有明确的界限</p>
+</li>
+<li><p>线性地址</p>
+<p>是指<strong>虚拟地址到物理地址变换之间的中间层</strong>，是处理器可寻址的内存空间（称为线性地址空 间）中的地址。程序代码会产生逻辑地址，或者说是段中的偏移地址，加上相应段基址就生成了一个线 性地址。如果启用了分页机制，那么线性地址可以再经过变换产生物理地址。若没有采用分页机制，那 么线性地址就是物理地址</p>
+</li>
+<li><p>物理地址</p>
+<p>指现在CPU外部地址总线上的寻址物理内存的地址信号，是地址变换的最终结果。虚拟地址 到物理地址的转化方法是与体系结构相关的，一般有分段与分页两种方式。以x86CPU为例，分段、分 页都是支持的。内存管理单元负责从虚拟地址到物理地址的转化。逻辑地址是段标识+段内偏移量的形 式，MMU通过査询段表，可以把逻辑地址转化为线性地址。如果CPU没有开启分页功能，那么线性地址 就是物理地址；如果CPU开启了分页功能MMU还需要查询页表来将线性地址转化为物理地址：逻辑地址 （段表）→线性地址（页表）→物理地址。</p>
+</li>
+</ul>
+<p>映射是一种多对一的关系，即不同的逻辑地址可以映射到同一个线性地址上；不同的线性地址也可以映 射到同一个物理地址上。而且，同一个线性地址在发生换页以后，也可能被重新装载到另外一个物理地 址上，所以这种多对一的映射关系也会随时间发生变化</p>
+<h2 id="虚拟内存的置换方式（？）"><a href="#虚拟内存的置换方式（？）" class="headerlink" title="虚拟内存的置换方式（？）"></a>虚拟内存的置换方式（？）</h2><h2 id="类里面有static、virtual，其内存分布"><a href="#类里面有static、virtual，其内存分布" class="headerlink" title="类里面有static、virtual，其内存分布"></a>类里面有static、virtual，其内存分布</h2><ul>
+<li><p>static修饰符</p>
+<ul>
+<li><p>static修饰成员变量</p>
+<p>对于非静态数据成员，每个类对象都有自己的拷贝。而静态数据成员被当做是类的成员，无论这个类被 定义了多少个，静态数据成员都只有一份拷贝，为该类型的所有对象所共享(包括其派生类)。所以，静态 数据成员的值对每个对象都是一样的，它的值可以更新</p>
+<p>因为静态数据成员在全局数据区分配内存，属于本类的所有对象共享，所以它不属于特定的类对象，在 没有产生类对象前就可以使用</p>
+</li>
+<li><p>static修饰成员函数</p>
+<p>与普通的成员函数相比，静态成员函数由于不是与任何的对象相联系，因此它不具有this指针。从这个 意义上来说，它无法访问属于类对象的非静态数据成员，也无法访问非静态成员函数，只能调用其他的 静态成员函数。static修饰的成员函数，在代码区分配内存</p>
+</li>
+</ul>
+</li>
+<li><p>C++继承和虚函数</p>
+<p>C++多态分为静态多态和动态多态。静态多态是通过重载和模板技术实现，在编译的时候确定。动态多 态通过虚函数和继承关系来实现，执行动态绑定，在运行的时候确定</p>
+<p>动态多态实现有几个条件：</p>
+<ul>
+<li>虚函数</li>
+<li>一个基类的指针或引用指向派生类的对象</li>
+</ul>
+<p>基类指针在调用成员函数(虚函数)时，就会去查找该对象的虚函数表。虚函数表的地址在每个对象的首地 址。查找该虚函数表中该函数的指针进行调用。 </p>
+<p>每个对象中保存的只是一个虚函数表的指针，C++内部为每一个类维持一个虚函数表，该类的对象的都 指向这同一个虚函数表。</p>
+<p>虚函数表中为什么就能准确查找相应的函数指针呢？因为在类设计的时候，虚函数表直接从基类也继承 过来，如果覆盖了其中的某个虚函数，那么虚函数表的指针就会被替换，因此可以根据指针准确找到该 调用哪个函数</p>
+</li>
+<li><p>virtual修饰符</p>
+<p>如果一个类是局部变量则该类数据存储在栈区，如果一个类是通过new&#x2F;malloc动态申请的，则该类数据 存储在堆区。 </p>
+<p>如果该类是virutal继承而来的子类，则该类的虚函数表指针和该类其他成员一起存储。虚函数表指针指 向只读数据段中的类虚函数表，虚函数表中存放着一个个函数指针，函数指针指向代码段中的具体函数。 </p>
+<p>如果类中成员是virtual属性，会隐藏父类对应的属性</p>
+</li>
+</ul>
+<h2 id="假设临界区资源释放，如何保证只让一个线程获取临界区资源"><a href="#假设临界区资源释放，如何保证只让一个线程获取临界区资源" class="headerlink" title="假设临界区资源释放，如何保证只让一个线程获取临界区资源"></a>假设临界区资源释放，如何保证只让一个线程获取临界区资源</h2><p>给临界区资源加互斥锁，可以保证临界区资源释放时，只有一个线程获得临界区资源。</p>
+<h2 id="缺页中断"><a href="#缺页中断" class="headerlink" title="缺页中断"></a>缺页中断</h2><p>malloc()和mmap()等内存分配函数，在分配时只是建立了进程虚拟地址空间，并没有分配虚拟内存对应 的物理内存。当进程访问这些没有建立映射关系的虚拟内存时，处理器自动触发一个缺页异常</p>
+<p>缺页中断：在请求分页系统中，可以通过查询页表中的状态位来确定所要访问的页面是否存在于内存 中。每当所要访问的页面不在内存是，会产生一次缺页中断，此时操作系统会根据页表中的外存地址在 外存中找到所缺的一页，将其调入内存</p>
+<p>缺页本身是一种中断，与一般的中断一样，需要经过4个处理步骤：</p>
+<ol>
+<li>保护CPU现场 </li>
+<li>分析中断原因 </li>
+<li>转入缺页中断处理程序进行处理 </li>
+<li>恢复CPU现场，继续执行</li>
+</ol>
+<p>但是缺页中断是由于所要访问的页面不存在于内存时，由硬件所产生的一种特殊的中断，因此，与一般 的中断存在区别： </p>
+<ol>
+<li>在指令执行期间产生和处理缺页中断信号 </li>
+<li>一条指令在执行期间，可能产生多次缺页中断 </li>
+<li>缺页中断返回是，执行产生中断的一条指令，而一般的中断返回是，执行下一条指令。</li>
+</ol>
+<h2 id="OS缺页置换算法"><a href="#OS缺页置换算法" class="headerlink" title="OS缺页置换算法"></a>OS缺页置换算法</h2><p>当访问一个内存中不存在的页，并且内存已满，则需要从内存中调出一个页或将数据送至磁盘对换区， 替换一个页，这种现象叫做缺页置换。当前操作系统最常采用的缺页置换算法如下：</p>
+<p> <strong>先进先出(FIFO)算法</strong>：置换最先调入内存的页面，即置换在内存中驻留时间最久的页面。按照进入内存 的先后次序排列成队列，从队尾进入，从队首删除。 </p>
+<p>最近最少使用<strong>（LRU）算法</strong>: 置换最近一段时间以来最长时间未访问过的页面。根据程序局部性原理，刚 被访问的页面，可能马上又要被访问；而较长时间内没有被访问的页面，可能最近不会被访问。当前最 常采用的就是LRU算法。</p>
+<h2 id="系统调用和库函数"><a href="#系统调用和库函数" class="headerlink" title="系统调用和库函数"></a>系统调用和库函数</h2><ul>
+<li><p>系统调用</p>
+<p>系统调用是通向操作系统本身的接口，是面向底层硬件的。通过系统调用，可以使得用户态运行的进程 与硬件设备(如CPU、磁盘、打印机等)进行交互，是操作系统留给应用程序的一个接口。下面为适用于访 问设备驱动程序的系统调用</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">open:</span> 打开文件或设备 <br><span class="hljs-symbol">read:</span> 从打开的文件或设备中读取数据 <br><span class="hljs-symbol">write:</span> 向打开的文件或设备中写入数据 <br><span class="hljs-symbol">close:</span> 关闭文件或设备 <br><span class="hljs-symbol">ioctl:</span> 把控制信息传递给设备驱动文件<br></code></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>库函数</p>
+<p>库函数（Library function）是把函数放到库里，供别人使用的一种方式。.方法是把一些常用到的函数 编完放到一个文件里，供不同的人进行调用。一般放在.lib文件中。库函数调用则是面向应用开发的，库 函数可分为两类，一类是C语言标准规定的库函数，一类是编译器特定的库函数。</p>
+</li>
+</ul>
+<p><strong>系统调用是为了方便使用操作系统的接口，而库函数则是为了人们编程的方便</strong></p>
+<p>库函数调用与系统无关，不同的系统，调用库函数，库函数会调用不同的底层函数实现，因此可移植性 好。</p>
+<p>由于库函数是基于c库的，因此不能用于内核对于底层驱动设备的操作</p>
+<p><strong>区别：</strong></p>
+<ol>
+<li>库函数是语言或应用程序的一部分，而系统调用是内核提供给应用程序的接口，属于系统的一部分 </li>
+<li>库函数在用户地址空间执行，系统调用是在内核地址空间执行，库函数运行时间属于用户时间，系 统调用属于系统时间，库函数开销较小，系统调用开销较大 </li>
+<li>库函数是有缓冲的，系统调用是无缓冲的 </li>
+<li>系统调用依赖于平台，库函数并不依赖</li>
+</ol>
+<p><img src="/2024/06/27/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/image-20231213192034154.png" srcset="/img/loading.gif" lazyload alt="image-20231213192034154"></p>
+<h2 id="page-cache"><a href="#page-cache" class="headerlink" title="page cache"></a>page cache</h2><p>加快从磁盘读取文件的速率。page cache中有一部分磁盘文件的缓存，因为从磁盘中读取文件比较慢， 所以读取文件先去page cache中去查找，如果命中，则不需要去磁盘中读取，大大加快读取速度。 </p>
+<p>在Linux 内核中，文件的每个数据块最多只能对应一个 Page Cache 项，它通过两个数据结构来管理这 些 Cache项，一个是radix tree，另一个是双向链表。Radix tree 是一种搜索树，Linux内核利用这个数 据结构来通过文件内偏移快速定位Cache 项</p>
+<h1 id="上下文"><a href="#上下文" class="headerlink" title="上下文"></a>上下文</h1><h2 id="上下文有哪些"><a href="#上下文有哪些" class="headerlink" title="上下文有哪些"></a>上下文有哪些</h2><p>上下文简单说来就是一个环境</p>
+<p>用户空间的应用程序，通过系统调用，进入内核空间。这个时候用户空间的进程要传递 很多变量、参数 的值给内核，内核态运行的时候也要保存用户进程的一些寄存 器值、变量等。所谓的“进程上下文”，可 以看作是用户进程传递给内核的这些参数以及内核要保存的那一整套的变量和寄存器值和当时的环境 等。</p>
+<p>相对于进程而言，就是进程执行时的环境。具体来说就是各个变量和数据，包括所有的寄存器变量、进 程打开的文件、内存信息等</p>
+<p>一个进程的上下文可以分为三个部分:<strong>用户级上下文、寄存器上下文以及系统级上下文</strong></p>
+<ol>
+<li>用户级上下文: 正文、数据、用户堆栈以及共享存储区； </li>
+<li>寄存器上下文: 通用寄存器、程序寄存器(IP)、处理器状态寄存器(EFLAGS)、栈指针(ESP)； </li>
+<li>系统级上下文: 进程控制块task_struct、内存管理信息(mm_struct、vm_area_struct、pgd、 pte)、内核栈</li>
+</ol>
+<p><strong>当发生进程调度时，进行进程切换就是上下文切换(context switch).操作系统必须对上面提到的全部信 息进行切换，新调度的进程才能运行。而系统调用进行的模式切换(mode switch)。模式切换与进程切 换比较起来，容易很多，而且节省时间，因为模式切换最主要的任务只是切换进程寄存器上下文的切 换</strong></p>
+<p>硬件通过触发信号，导致内核调用中断处理程序，进入内核空间。这个过程中，硬件的 一些变量和参数 也要传递给内核，内核通过这些参数进行中断处理。所谓的“ 中断上下文”，其实也可以看作就是硬件传 递过来的这些参数和内核需要保存的一些其他环境（主要是当前被打断执行的进程环境）。中断时，内 核不代表任何进程运行，它一般只访问系统空间，而不会访问进程空间，内核在中断上下文中执行时一 般不会阻塞</p>
+<h2 id="为什么会有上下文"><a href="#为什么会有上下文" class="headerlink" title="为什么会有上下文"></a>为什么会有上下文</h2><p>内核空间和用户空间是现代操作系统的两种工作模式，内核模块运行在内核空间，而用户态应用程序运 行在用户空间。它们代表不同的级别，而对系统资源具有不同的访问权限。内核模块运行在最高级别 （内核态），这个级下所有的操作都受系统信任，而应用程序运行在较低级别（用户态）。在这个级 别，处理器控制着对硬件的直接访问以及对内存的非授权访问。内核态和用户态有自己的内存映射，即 自己的地址空间。</p>
+<p>其中，处理器总处于以下状态中的一种： </p>
+<p>内核态，运行于进程上下文，内核代表进程运行于内核空间； </p>
+<p>用户态，运行于用户空间。</p>
+<p>系统的两种不同运行状态，才有了上下文的概念。用户空间的应用程序，如果想请求系统服务，比如操 作某个物理设备，映射设备的地址到用户空间，必须通过系统调用来实现。（系统调用是操作系统提供 给用户空间的接口函数）。</p>
+<p>通过系统调用，用户空间的应用程序就会进入内核空间，由内核代表该进程运行于内核空间，这就涉及 到上下文的切换，用户空间和内核空间具有不同的 地址映射，通用或专用的寄存器组，而<strong>用户空间的进 程要传递很多变量、参数给内核，内核也要保存用户进程的一些寄存器、变量等，以便系统调用结束后 回到用户空间继续执行</strong></p>
+<h2 id="用户态到内核态什么情况下会切换"><a href="#用户态到内核态什么情况下会切换" class="headerlink" title="用户态到内核态什么情况下会切换"></a>用户态到内核态什么情况下会切换</h2><ol>
+<li>进程上下文主要是异常处理程序和内核线程。内核之所以进入进程上下文是因为进程自身的一些工 作需要在内核中做。例如，系统调用是为当前进程服务的，异常通常是处理进程导致的错误状态 等。 </li>
+<li>中断上下文是由于硬件发生中断时会触发中断信号请求，请求系统处理中断，执行中断服务子程 序。</li>
+</ol>
+<h2 id="中断上下文代码中有哪些注意事项"><a href="#中断上下文代码中有哪些注意事项" class="headerlink" title="中断上下文代码中有哪些注意事项"></a>中断上下文代码中有哪些注意事项</h2><p>运行于进程上下文的内核代码是可抢占的，但中断上下文则会一直运行至结束，不会被抢占。所以中断 处理程序代码要受到一些限制，在中断代码中不能出现实现下面功能的代码：</p>
+<ol>
+<li><strong>睡眠或者放弃CPU</strong> ，因为内核在进入中断之前会关闭进程调度，一旦睡眠或者放弃CPU，这时内核无法调度别的进程来 执行，系统就会死掉。牢记：中断服务子程序一定不能睡眠（或者阻塞）。 </li>
+<li><strong>尝试获得信号量</strong> ，如果获得不到信号量，代码就会睡眠，导致（1）中的结果。 </li>
+<li><strong>执行耗时的任务</strong> ，中断处理应该尽可能快，因为如果一个处理程序是IRQF_DISABLED类型，他执行的时候会禁止所有 本地中断线，而内核要响应大量服务和请求，中断上下文占用CPU时间太长会严重影响系统功能。 中断处理程序的任务尽可能放在中断下半部执行</li>
+<li><strong>访问用户空间的虚拟地址</strong> ，因为中断运行在内核空间。</li>
+</ol>
+<h2 id="线程需要保存哪些上下文，SP、PC、EAX寄存器的作用"><a href="#线程需要保存哪些上下文，SP、PC、EAX寄存器的作用" class="headerlink" title="线程需要保存哪些上下文，SP、PC、EAX寄存器的作用"></a>线程需要保存哪些上下文，SP、PC、EAX寄存器的作用</h2><p>线程在切换的过程中需要保存当前线程id、线程状态、堆栈、寄存器状态等信息。其中寄存器主要包括 SP、PC、EAX等寄存器，其主要功能如下：</p>
+<p>SP:堆栈指针，指向当前栈的栈顶地址 </p>
+<p>PC:程序计数器，存储下一条将要执行的指令 </p>
+<p>EAX:累加寄存器，用于加法乘法的缺省寄存器</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="category-chain-item">操作系统</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="print-no-link">#嵌入式</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>操作系统</div>
+      <div>http://example.com/2024/06/27/操作系统/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>xiaoyuzi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/06/27/Linux%E5%8D%A1%E7%89%87%E7%94%B5%E8%84%91/" title="Linux卡片电脑">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux卡片电脑</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/27/PC%E6%80%A7%E8%83%BD%E7%9B%91%E6%B5%8B%E7%AB%99/" title="PC性能检测站">
+                        <span class="hidden-mobile">PC性能检测站</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
