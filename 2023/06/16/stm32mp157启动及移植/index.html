@@ -278,18 +278,18 @@
 <li><p>相对于MCU的启动方式，MPU的启动要复杂很多。对于MPU的芯片来说，启动方式都是大差不差，大致如下进行；看似先从启动bootloader，但是实际这个bootloader也需要运行的地方。所以大部分的芯片内部都有一小段存放厂商写好的一个裸机程序放在ROM里面，这里的ROM不是指的flash之类的。而是芯片内部的ROM，然后还有一个内部的RAM，这个不是DDR。</p>
 </li>
 <li><p>stm32mp1的启动方式有以下几种，根据芯片的BOOT0和BOOT1和BOOT2引脚来设置。</p>
-<p><img src="/2023/06/16/stm32mp157%E5%90%AF%E5%8A%A8%E5%8F%8A%E7%A7%BB%E6%A4%8D/photo/157%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./../photo/157%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F.png" srcset="/img/loading.gif" lazyload></p>
 </li>
 <li><p>我们的代码存在EMMC上面，也就是NAND Flash上面，他是非XIP设备，不能直接运行程序。因此需要把上面的代码搬运到DDR上面来运行，可是DDR不像SRAM，不用初始化就可以使用。使用前需要初始化DDR才能使用。stm32mp157里面有128K的内部ROM地址为0x00000000<del>0x00020000和256KB的内部RAM地址为0x2FFC0000</del>0x2FFFFFFF。内部的ROM存储的代码针对不同启动方式有实现不同的功能。</p>
-<p><img src="/2023/06/16/stm32mp157%E5%90%AF%E5%8A%A8%E5%8F%8A%E7%A7%BB%E6%A4%8D/photo/157%E5%86%85%E9%83%A8ROM.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/2023/06/16/stm32mp157%E5%90%AF%E5%8A%A8%E5%8F%8A%E7%A7%BB%E6%A4%8D/photo/157%E5%86%85%E9%83%A8RAM.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./../photo/157%E5%86%85%E9%83%A8ROM.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./../photo/157%E5%86%85%E9%83%A8RAM.png" srcset="/img/loading.gif" lazyload></p>
 </li>
 <li><p>我们选择外部FLASH启动时候，内部ROM的功能就会执行安全启动（secure boot）；安全启动很复杂，只要CPU正常运行，就会进入冷启动，然后就从flash中加载系统，并且进行鉴权，鉴权成功才会加载内核系统。</p>
 </li>
 <li><p>bootloader启动分成两个阶段第一阶段启动阶段FSBL和第二启动阶段SSBL阶段。上电后内部ROM在安全启动方式下。ROM代码从选定的flash里面加载的第一段代码就是FSBL镜像，这个镜像有个要求在可执行二进制文件加一段头部信息代码。ROM读取了带头部信息的FSBL镜像后，把带头部信息的镜像拷贝到内部RAM里面运行，先对头部信息进行鉴权，鉴权成功后，头部信息保存着FSBL镜像的入口地址0x2FFC2500，头部信息大小为0x100。因此带头信息的FSBL镜像会被加载到0x2FFC2400这个地址上执行。我们可以在任意裸机程序加上头部信息就可以作为FSBL镜像了。</p>
 </li>
 <li><p>st公司专门做了一个添加头部信息的软件，来给二进制文件加头部，让内部代码可以鉴权成功。工具叫stm32image。可以从github下载：<a target="_blank" rel="noopener" href="https://github.com/ARM-software/arm-trusted-firmware/tree/master/tools/stm32image">arm-trusted-firmware&#x2F;tools&#x2F;stm32image at master · ARM-software&#x2F;arm-trusted-firmware · GitHub</a>；下载后是一个c代码，我们需要编译一下。注意这里不是使用交叉编译工具链，是使用ubunt自带的gcc工具链</p>
-<p><img src="/2023/06/16/stm32mp157%E5%90%AF%E5%8A%A8%E5%8F%8A%E7%A7%BB%E6%A4%8D/photo/157image.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./../photo/157image.png" srcset="/img/loading.gif" lazyload></p>
 </li>
 <li><p>在stm32mp157中启动流程是bootROM-&gt;TFA可信固件(FSBL)-&gt;uboot(SSBL)-&gt;linux-&gt;rootfs这里多出来一个TFA可信固件，主要是ARM为了针对CPU安全提出来的一种隔离方式启动，如果内部ROM鉴权失败，是不会启动后面的uboot一系列操作。</p>
 </li>
@@ -379,9 +379,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/27/%E9%93%BE%E8%A1%A8/" title="链表">
+                      <a href="/2023/10/23/%E4%BB%A3%E7%A0%81%E9%87%8D%E5%AE%9A%E4%BD%8D/" title="代码重定位">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">链表</span>
+                        <span class="hidden-mobile">代码重定位</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     

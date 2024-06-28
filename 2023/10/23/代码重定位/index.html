@@ -1,0 +1,933 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/start.png">
+  <link rel="icon" href="/img/start.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#525062">
+  <meta name="author" content="xiaoyuzi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="深入理解代码的重定位">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码重定位">
+<meta property="og:url" content="http://example.com/2023/10/23/%E4%BB%A3%E7%A0%81%E9%87%8D%E5%AE%9A%E4%BD%8D/index.html">
+<meta property="og:site_name" content="xyz_blog">
+<meta property="og:description" content="深入理解代码的重定位">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/photo/001_sct_example.png">
+<meta property="og:image" content="http://example.com/photo/image-20231016192932240.png">
+<meta property="og:image" content="http://example.com/photo/002_execution_region_symbol.png">
+<meta property="og:image" content="http://example.com/photo/003_load_region_symbol.png">
+<meta property="og:image" content="http://example.com/photo/004_bss_section_symbol.png">
+<meta property="og:image" content="http://example.com/photo/006_text_section_load_symbol.png">
+<meta property="article:published_time" content="2023-10-23T11:21:37.000Z">
+<meta property="article:modified_time" content="2024-06-28T13:34:28.554Z">
+<meta property="article:author" content="xiaoyuzi">
+<meta property="article:tag" content="汇编">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="STM32">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/photo/001_sct_example.png">
+  
+  
+  
+  <title>代码重定位 - xyz_blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>小宇子_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/b.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="代码重定位"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-23 19:21" pubdate>
+          2023年10月23日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">代码重定位</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、段的概念"><a href="#一、段的概念" class="headerlink" title="一、段的概念"></a>一、段的概念</h1><p>代码段、只读数据段、可读可写的数据段、BSS段。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">char</span> g_Char = <span class="hljs-string">&#x27;A&#x27;</span>;           <span class="hljs-comment">// 可读可写，不能放在ROM上，应该放在RAM里</span><br><span class="hljs-type">const</span> <span class="hljs-type">char</span> g_Char2 = <span class="hljs-string">&#x27;B&#x27;</span>;    <span class="hljs-comment">// 只读变量，可以放在ROM上</span><br><span class="hljs-type">int</span> g_A = <span class="hljs-number">0</span>;   <span class="hljs-comment">// 初始值为0，干嘛浪费空间保存在ROM上？没必要</span><br><span class="hljs-type">int</span> g_B;       <span class="hljs-comment">// 没有初始化，干嘛浪费空间保存在ROM上？没必要</span><br></code></pre></td></tr></table></figure>
+
+<p>所以，程序分为这几个段：</p>
+<ul>
+<li>代码段(RO-CODE)：就是程序本身，不会被修改</li>
+<li>可读可写的数据段(RW-DATA)：有初始值的全局变量、静态变量，<strong>需要从ROM上复制到内存</strong></li>
+<li>只读的数据段(RO-DATA)：可以放在ROM上，不需要复制到内存</li>
+<li>BSS段或ZI段：<ul>
+<li>初始值为0的全局变量或静态变量，没必要放在ROM上，使用之前清零就可以</li>
+<li>未初始化的全局变量或静态变量，没必要放在ROM上，使用之前清零就可以</li>
+</ul>
+</li>
+<li>局部变量：保存在栈中，运行时生成</li>
+<li>堆：一块空闲空间，使用malloc函数来管理它，malloc函数可以自己写</li>
+</ul>
+<h1 id="二、重定位要做的事"><a href="#二、重定位要做的事" class="headerlink" title="二、重定位要做的事"></a>二、重定位要做的事</h1><h2 id="1-程序中含有什么？"><a href="#1-程序中含有什么？" class="headerlink" title="1. 程序中含有什么？"></a>1. 程序中含有什么？</h2><ul>
+<li>代码段：如果它不在链接地址上，就需要重定位</li>
+<li>只读数据段：如果它不在链接地址上，就需要重定位</li>
+<li>可读可写的数据段：如果它不在链接地址上，就需要重定位</li>
+<li>BSS段：不需要重定位，因为程序里根本不保存BSS段，使用前把BSS段对应的空间清零即可</li>
+</ul>
+<h2 id="2-谁来做重定位？"><a href="#2-谁来做重定位？" class="headerlink" title="2. 谁来做重定位？"></a>2. 谁来做重定位？</h2><ul>
+<li>程序本身：它把自己复制到链接地址去</li>
+<li>一开始，程序可能并不位于它的链接地址上，为什么它可以执行重定位的操作？<ul>
+<li>因为重定位的代码是使用<strong>“位置无关码”</strong>写的</li>
+</ul>
+</li>
+<li>什么叫位置无关码：这段代码扔在任何位置都可以运行，跟它所在的位置无关</li>
+<li>怎么写出<strong>位置无关码：</strong><ul>
+<li>跳转：使用相对跳转指令，不能使用绝对跳转指令<ul>
+<li>只能使用branch指令(比如<code>bl main</code>)，不能给PC直接复制，比如<code>ldr pc, =main</code></li>
+</ul>
+</li>
+<li>不要访问全局变量、静态变量</li>
+<li>不使用字符串</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-怎么做重定位和清除BSS段？"><a href="#3-怎么做重定位和清除BSS段？" class="headerlink" title="3. 怎么做重定位和清除BSS段？"></a>3. 怎么做重定位和清除BSS段？</h2><ul>
+<li>核心：复制</li>
+<li>复制的三要素：源、目的、长度<ul>
+<li>怎么知道代码段&#x2F;数据段保存在哪？(加载地址)</li>
+<li>怎么知道代码段&#x2F;数据段要被复制到哪？(链接地址)</li>
+<li>怎么知道代码段&#x2F;数据段的长度？</li>
+</ul>
+</li>
+<li>怎么知道BSS段的地址范围：起始地址、长度？</li>
+<li>这一切<ul>
+<li>在keil中使用散列文件(Scatter File)来描述</li>
+<li>在GCC中使用链接脚本(Link Script)来描述</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-加载地址和链接地址的区别"><a href="#4-加载地址和链接地址的区别" class="headerlink" title="4. 加载地址和链接地址的区别"></a>4. 加载地址和链接地址的区别</h2><p>程序运行时，<strong>应该</strong>位于它的链接地址处，因为：</p>
+<ul>
+<li>使用函数地址时用的是”函数的链接地址”，所以代码段<strong>应该</strong>位于链接地址处</li>
+<li>去访问全局变量、静态变量时，用的是”变量的链接地址”，所以数据段<strong>应该</strong>位于链接地址处</li>
+</ul>
+<p>但是： 程序一开始时可能并没有位于它的”链接地址”：</p>
+<ul>
+<li>比如对于STM32F103，程序被烧录器烧写在Flash上，这个地址称为”加载地址”</li>
+<li>比如对于IMX6ULL&#x2F;STM32MP157，片内ROM根据头部信息把程序读入内存，这个地址称为“加载地址”</li>
+</ul>
+<p>当<strong>加载地址 ！&#x3D; 链接地址</strong>时，就需要重定位。</p>
+<h1 id="四、散列文件使用与分析"><a href="#四、散列文件使用与分析" class="headerlink" title="四、散列文件使用与分析"></a>四、散列文件使用与分析</h1><h2 id="1-重定位的实质-移动数据"><a href="#1-重定位的实质-移动数据" class="headerlink" title="1. 重定位的实质: 移动数据"></a>1. 重定位的实质: 移动数据</h2><p>把代码段、只读数据段、数据段，移动到它的链接地址处。<br>也就是<strong>复制</strong>！<br>数据复制的三要素：源、目的、长度。</p>
+<ul>
+<li><p>数据保存在哪里？加载地址</p>
+</li>
+<li><p>数据要复制到哪里？链接地址</p>
+</li>
+<li><p>长度</p>
+</li>
+</ul>
+<p>这3要素怎么得到？<br>在keil中，使用散列文件来描述。<br>散列？分散排列？<br>是的，在STM32F103这类资源紧缺的单片机芯片中，</p>
+<ul>
+<li>代码段保存在Flash上，直接在Flash上运行(当然也可以重定位到内存里)</li>
+<li>数据段保存在Flash上，使用前被复制到内存里</li>
+</ul>
+<h2 id="2-散列文件示例"><a href="#2-散列文件示例" class="headerlink" title="2. 散列文件示例"></a>2. 散列文件示例</h2><h3 id="2-1-示例代码"><a href="#2-1-示例代码" class="headerlink" title="2.1 示例代码"></a>2.1 示例代码</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs markdown">; <span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span>*<br>; <span class="hljs-strong">*** Scatter-Loading Description File generated by uVision **</span>*<br>; <span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span><span class="hljs-strong">****</span>*<br><br>LR<span class="hljs-emphasis">_IROM1 0x08000000 0x00080000  &#123;    ; load region size_</span>region<br>  ER<span class="hljs-emphasis">_IROM1 0x08000000 0x00080000  &#123;  ; load address = execution address</span><br><span class="hljs-emphasis">   *.o (RESET, +First)</span><br><span class="hljs-emphasis">   .ANY (+RO)</span><br><span class="hljs-emphasis">   .ANY (+XO)</span><br><span class="hljs-emphasis">  &#125;</span><br><span class="hljs-emphasis">  RW_</span>IRAM1 0x20000000 0x00010000  &#123;  ; RW data<br>   .ANY (+RW +ZI)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-散列文件语法"><a href="#2-2-散列文件语法" class="headerlink" title="2.2 散列文件语法"></a>2.2 散列文件语法</h3><p>一个散列文件由一个或多个<code>Load region</code>组成：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs 1c">load_region_description ::=<br>load_region_name (base_address <span class="hljs-string">| (&quot;</span>+<span class="hljs-string">&quot; offset)) [attribute_list] [max_size]</span><br><span class="hljs-string">&quot;&#123;&quot;</span><br>execution_region_description+<br><span class="hljs-string">&quot;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p><code>Load region</code>中含有一个或多个<code>Execution region</code>，<br><code>Execution region</code>语法如下：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs 1c">execution_region_description ::=<br>exec_region_name (base_address <span class="hljs-string">| &quot;</span>+<span class="hljs-string">&quot; offset) [attribute_list] [max_size | length]</span><br><span class="hljs-string">&quot;&#123;&quot;</span><br>input_section_description*<br><span class="hljs-string">&quot;&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p><code>Execution region</code>中含有一个或多个<code>Input section</code>，<br><code>Input section</code>语法如下：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs 1c">input_section_description ::=<br>module_select_pattern [ <span class="hljs-string">&quot;(&quot;</span> input_section_selector ( <span class="hljs-string">&quot;,&quot;</span><br>input_section_selector )* <span class="hljs-string">&quot;)&quot;</span> ]<br>input_section_selector ::=<br><span class="hljs-string">&quot;+&quot;</span> input_section_attr <span class="hljs-string">|</span><br>input_section_pattern <span class="hljs-string">|</span><br>input_section_type <span class="hljs-string">|</span><br>input_symbol_pattern <span class="hljs-string">|</span><br>section_properties<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-散列文件解析"><a href="#3-散列文件解析" class="headerlink" title="3. 散列文件解析"></a>3. 散列文件解析</h2><p><img src="/./../photo/001_sct_example.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./../photo/image-20231016192932240.png" srcset="/img/loading.gif" lazyload alt="image-20231016192932240"></p>
+<p>*.o ：所有objects文件</p>
+<p>*：所有objects文件和库，在一个散列文件中只能使用一个*</p>
+<p>.ANY：等同于*，优先级比*低；在一个散列文件的多个可执行域中可以有多个<code>.ANY</code></p>
+<h2 id="4-怎么获得region的信息"><a href="#4-怎么获得region的信息" class="headerlink" title="4. 怎么获得region的信息"></a>4. 怎么获得region的信息</h2><h3 id="4-1-可执行域的信息"><a href="#4-1-可执行域的信息" class="headerlink" title="4.1 可执行域的信息"></a>4.1 可执行域的信息</h3><p><img src="/./../photo/002_execution_region_symbol.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-2-加载域的信息"><a href="#4-2-加载域的信息" class="headerlink" title="4.2 加载域的信息"></a>4.2 加载域的信息</h3><p><img src="/./../photo/003_load_region_symbol.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-3-汇编代码里怎么使用这些信息（数据段重定位）"><a href="#4-3-汇编代码里怎么使用这些信息（数据段重定位）" class="headerlink" title="4.3 汇编代码里怎么使用这些信息（数据段重定位）"></a>4.3 汇编代码里怎么使用这些信息（数据段重定位）</h3><p>示例代码如下：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs gams">IMPORT |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|<br>IMPORT |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length|<br>IMPORT |Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|<br><br>LDR R0, = |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|    ; DEST<br>LDR R1, = |Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|     ; SORUCE<br>LDR R2, = |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length|  ; LENGTH<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-4-C语言里怎么使用这些信息"><a href="#4-4-C语言里怎么使用这些信息" class="headerlink" title="4.4 C语言里怎么使用这些信息"></a>4.4 C语言里怎么使用这些信息</h3><h4 id="4-4-1-方法1"><a href="#4-4-1-方法1" class="headerlink" title="4.4.1 方法1"></a>4.4.1 方法1</h4><p>声明为外部变量。<br>注意：使用时<strong>需要</strong>使用取址符：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gams">extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base;<br>extern int Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base;<br>extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length;<br><br>memcpy(&amp;Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base, &amp;Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length, &amp;Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base);<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-4-2-方法2"><a href="#4-4-2-方法2" class="headerlink" title="4.4.2 方法2"></a>4.4.2 方法2</h4><p>声明为外部数组。<br>注意：使用时<strong>不需要</strong>使用取址符：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gams">extern char Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base[];<br>extern char Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base[];<br>extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length;<br><br>memcpy(Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base, Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length, &amp;Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base);<br></code></pre></td></tr></table></figure>
+
+<h1 id="五、清除BSS段-ZI段"><a href="#五、清除BSS段-ZI段" class="headerlink" title="五、清除BSS段(ZI段)"></a>五、清除BSS段(ZI段)</h1><h2 id="1-C语言中的BSS段"><a href="#1-C语言中的BSS段" class="headerlink" title="1. C语言中的BSS段"></a>1. C语言中的BSS段</h2><p>程序里的全局变量，如果它的初始值为0，或者没有设置初始值，这些变量被放在BSS段里，也叫ZI段。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">char</span> g_Char = <span class="hljs-string">&#x27;A&#x27;</span>;<br><span class="hljs-type">const</span> <span class="hljs-type">char</span> g_Char2 = <span class="hljs-string">&#x27;B&#x27;</span>;<br><span class="hljs-type">int</span> g_A = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 放在BSS段</span><br><span class="hljs-type">int</span> g_B;      <span class="hljs-comment">// 放在BSS段</span><br></code></pre></td></tr></table></figure>
+
+<p>BSS段并不会放入bin文件中，否则也太浪费空间了。<br>在使用BSS段里的变量之前，把BSS段所占据的内存清零就可以了。</p>
+<ul>
+<li><p>注意：对于keil来说，一个本该放到BSS段的变量，如果它所占据的空间小于等于8字节自己，keil仍然会把它放在data段里。只有当它所占据的空间大于8字节时，才会放到BSS段。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> g_A[<span class="hljs-number">3</span>] = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;;   <span class="hljs-comment">// 放在BSS段</span><br><span class="hljs-type">char</span> g_B[<span class="hljs-number">9</span>];           <span class="hljs-comment">// 放在BSS段</span><br><br><span class="hljs-type">int</span> g_A[<span class="hljs-number">2</span>] = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;;   <span class="hljs-comment">// 放在data段</span><br><span class="hljs-type">char</span> g_B[<span class="hljs-number">8</span>];           <span class="hljs-comment">// 放在data段</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2-清除BSS段"><a href="#2-清除BSS段" class="headerlink" title="2. 清除BSS段"></a>2. 清除BSS段</h2><h3 id="2-1-BSS段在哪？多大？"><a href="#2-1-BSS段在哪？多大？" class="headerlink" title="2.1 BSS段在哪？多大？"></a>2.1 BSS段在哪？多大？</h3><p>在散列文件中，BSS段(ZI段)在可执行域<code>RW_IRAM1</code>中描述：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs dns">LR_IROM1 <span class="hljs-number">0x08000000</span> <span class="hljs-number">0x00080000</span>  &#123;    <span class="hljs-comment">; load region size_region</span><br>  ER_IROM1 <span class="hljs-number">0x08000000</span> <span class="hljs-number">0x00080000</span>  &#123;  <span class="hljs-comment">; load address = execution address</span><br>   *.o (RESET, +First)<br>   *(InRoot$$Sections)<br>   .ANY (+RO)<br>   .ANY (+XO)<br>  &#125;<br>  RW_IRAM1 <span class="hljs-number">0x20000000</span> <span class="hljs-number">0x00010000</span>  &#123;  <span class="hljs-comment">; RW data</span><br>   .ANY (+RW +ZI)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>BSS段(ZI段)的链接地址(基地址)、长度，使用下面的符号获得：<br><img src="/./../photo/004_bss_section_symbol.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-2-怎么清除BSS段"><a href="#2-2-怎么清除BSS段" class="headerlink" title="2.2  怎么清除BSS段"></a>2.2  怎么清除BSS段</h3><h4 id="2-2-1-汇编码"><a href="#2-2-1-汇编码" class="headerlink" title="2.2.1 汇编码"></a>2.2.1 汇编码</h4><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs gams">IMPORT |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ZI<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|<br>IMPORT |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ZI<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length|<br><br>LDR R0, = |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ZI<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|       ; DEST<br>LDR R1, = |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>RW_IRAM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ZI<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length|     ; Length<br>BL memset<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-2-C语言"><a href="#2-2-2-C语言" class="headerlink" title="2.2.2 C语言"></a>2.2.2 C语言</h4><ul>
+<li>方法1<br>声明为外部变量，使用时<strong>需要</strong>使用取址符：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> Image$$RW_IRAM1$$ZI$$Base;<br><span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> Image$$RW_IRAM1$$ZI$$Length;<br><br><span class="hljs-built_in">memset</span>(&amp;Image$$RW_IRAM1$$ZI$$Base, <span class="hljs-number">0</span>, &amp;Image$$RW_IRAM1$$ZI$$Length);<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>方法2<br>声明为外部数组，使用时<strong>不需要</strong>使用取址符：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">extern</span> <span class="hljs-type">char</span> Image$$RW_IRAM1$$ZI$$Base[];<br><span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> Image$$RW_IRAM1$$ZI$$Length[];<br><br><span class="hljs-built_in">memset</span>(Image$$RW_IRAM1$$ZI$$Base[], <span class="hljs-number">0</span>, Image$$RW_IRAM1$$ZI$$Length);<br></code></pre></td></tr></table></figure>
+
+<h1 id="六、代码段重定位"><a href="#六、代码段重定位" class="headerlink" title="六、代码段重定位"></a>六、代码段重定位</h1><h2 id="1-加载地址等于链接地址"><a href="#1-加载地址等于链接地址" class="headerlink" title="1. 加载地址等于链接地址"></a>1. 加载地址等于链接地址</h2><p>在默认散列文件中，代码段的<code>load address = execution address</code>，<br>也就是加载地址和执行地址(链接地址)一致，所以无需重定位：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs dns">LR_IROM1 <span class="hljs-number">0x08000000</span> <span class="hljs-number">0x00080000</span>  &#123;    <span class="hljs-comment">; load region size_region</span><br>  ER_IROM1 <span class="hljs-number">0x08000000</span> <span class="hljs-number">0x00080000</span>  &#123;  <span class="hljs-comment">; load address = execution address</span><br>   *.o (RESET, +First)<br>   *(InRoot$$Sections)<br>   .ANY (+RO)<br>   .ANY (+XO)<br>  &#125;<br>  RW_IRAM1 <span class="hljs-number">0x20000000</span> <span class="hljs-number">0x00010000</span>  &#123;  <span class="hljs-comment">; RW data</span><br>   .ANY (+RW +ZI)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-加载地址不等于链接地址"><a href="#2-加载地址不等于链接地址" class="headerlink" title="2.加载地址不等于链接地址"></a>2.加载地址不等于链接地址</h2><p>有时候，我们需要把程序复制到内存里运行，比如：</p>
+<ul>
+<li>想让程序执行得更快：需要把代码段复制到内存里</li>
+<li>程序很大，保存在片外SPI Flash中，SPI Flash上的代码无法直接执行，需要复制到内存里</li>
+</ul>
+<p>这时候，需要修改散列文件，把代码段的可执行域放在内存里。<br>那么程序运行时，需要尽快把代码段重定位到内存。<br>散列文件示例：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">LR_IROM1 <span class="hljs-number">0x08000000</span> <span class="hljs-number">0x00080000</span>  &#123;    ; <span class="hljs-keyword">load</span> region size_region<br>  ER_IROM1 <span class="hljs-number">0x20000000</span>   &#123;  ; <span class="hljs-keyword">load</span> address != execution address<br>   *.o (<span class="hljs-keyword">RESET</span>, +First)<br>   .<span class="hljs-keyword">ANY</span> (+RO)<br>   .<span class="hljs-keyword">ANY</span> (+XO)<br>  &#125;<br>  RW_IRAM1 +<span class="hljs-number">0</span>   &#123;  ; RW data<br>   .<span class="hljs-keyword">ANY</span> (+RW +ZI)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>改完之后出现报错（6个error）：</p>
+<p>1.删除*(InRoot$$Sections)</p>
+<p>2.将启动文件中的main改成mymain</p>
+<p>不能打印：</p>
+<p>将最开始执行的第二条指令改成 0x08000009</p>
+</blockquote>
+<p>上面的散列文件中：</p>
+<ul>
+<li>可执行域ER_IROM1<ul>
+<li>加载地址为0x08000000，可执行地址为0x20000000，两者不相等</li>
+<li>板子上电后，从0x08000000处开始运行，需要尽快把代码段复制到0x20000000</li>
+</ul>
+</li>
+<li>可执行域RW_IRAM1<ul>
+<li>加载地址：紧跟着ER_IROM1的加载地址</li>
+<li>可执行地址：紧跟着ER_IROM1的可执行地址</li>
+<li>需要尽快把数据段复制到可执行地址处</li>
+</ul>
+</li>
+</ul>
+<p>数据段的重定位我们做过实验，<br>如果代码段不重定位的话，会发生什么事？</p>
+<h2 id="3-代码段不重定位的后果"><a href="#3-代码段不重定位的后果" class="headerlink" title="3. 代码段不重定位的后果"></a>3. 代码段不重定位的后果</h2><p>不能使用链接地址来调用函数</p>
+<ul>
+<li><p>汇编中</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">ldr</span>  <span class="hljs-built_in">pc</span>, <span class="hljs-symbol">=main</span>   <span class="hljs-comment">; 这样调用函数时，用到main函数的链接地址，如果代码段没有重定位，则跳转失败</span><br></code></pre></td></tr></table></figure>
+
+</li>
+<li><p>C语言中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> (*funcptr)(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s, <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> val);<br>funcptr = put_s_hex;<br>funcptr(<span class="hljs-string">&quot;hello, test function ptr&quot;</span>, <span class="hljs-number">123</span>);<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="4-代码段重定位"><a href="#4-代码段重定位" class="headerlink" title="4. 代码段重定位"></a>4. 代码段重定位</h2><h3 id="4-1-代码段在哪？多大？"><a href="#4-1-代码段在哪？多大？" class="headerlink" title="4.1 代码段在哪？多大？"></a>4.1 代码段在哪？多大？</h3><p>在散列文件中，代码段在可执行域<code>ER_IROM1</code>中描述：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs dns">LR_IROM1 <span class="hljs-number">0x08000000</span> <span class="hljs-number">0x00080000</span>  &#123;    <span class="hljs-comment">; load region size_region</span><br>  ER_IROM1 <span class="hljs-number">0x08000000</span> <span class="hljs-number">0x00080000</span>  &#123;  <span class="hljs-comment">; load address = execution address</span><br>   *.o (RESET, +First)<br>   *(InRoot$$Sections)<br>   .ANY (+RO)<br>   .ANY (+XO)<br>  &#125;<br>  RW_IRAM1 <span class="hljs-number">0x20000000</span> <span class="hljs-number">0x00010000</span>  &#123;  <span class="hljs-comment">; RW data</span><br>   .ANY (+RW +ZI)<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>代码段的链接地址(基地址)、长度，使用下面的符号获得：</p>
+<p>005_text_section_execution_symbol.png)</p>
+<p>代码段的加载地址，使用下面的符号获得：</p>
+<p><img src="/./../photo/006_text_section_load_symbol.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-2-怎么重定位"><a href="#4-2-怎么重定位" class="headerlink" title="4.2 怎么重定位"></a>4.2 怎么重定位</h3><h4 id="4-2-1-汇编代码"><a href="#4-2-1-汇编代码" class="headerlink" title="4.2.1 汇编代码"></a>4.2.1 汇编代码</h4><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs gams">IMPORT |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|<br>IMPORT |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length|<br>IMPORT |Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|<br><br>LDR R0, = |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|    ; DEST<br>LDR R1, = |Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base|     ; SORUCE<br>LDR R2, = |Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length|  ; LENGTH<br>BL memcpy<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-2-2-C语言代码"><a href="#4-2-2-C语言代码" class="headerlink" title="4.2.2 C语言代码"></a>4.2.2 C语言代码</h4><ul>
+<li>方法1</li>
+</ul>
+<p>声明为外部变量，使用时<strong>需要</strong>使用取址符：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gams">extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base;<br>extern int Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base;<br>extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length;<br><br>memcpy(&amp;Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base, &amp;Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length, &amp;Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base);<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>方法2</li>
+</ul>
+<p>声明为外部数组，使用时<strong>不需要</strong>使用取址符：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gams">extern char Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base[];<br>extern char Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base[];<br>extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length;<br><br>memcpy(Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base, Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length, &amp;Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base);<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="5-为什么重定位之前的代码也可以正常运行？"><a href="#5-为什么重定位之前的代码也可以正常运行？" class="headerlink" title="5. 为什么重定位之前的代码也可以正常运行？"></a>5. 为什么重定位之前的代码也可以正常运行？</h2><p>因为重定位之前的代码是使用<strong>位置无关码</strong>写的：</p>
+<ul>
+<li><p>只使用相对跳转指令：B、BL</p>
+</li>
+<li><p>不只用绝对跳转指令：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">LDR</span> <span class="hljs-built_in">R0</span>, <span class="hljs-symbol">=main</span><br><span class="hljs-keyword">BLX</span> <span class="hljs-built_in">R0</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>不访问全局变量、静态变量、字符串、数组</p>
+</li>
+<li><p>重定位完后，使用绝对跳转指令跳转到XXX函数的链接地址去</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-keyword">BL</span> main         <span class="hljs-comment">; bl相对跳转，程序仍在Flash上运行</span><br><br><span class="hljs-keyword">LDR</span> <span class="hljs-built_in">R0</span>, <span class="hljs-symbol">=main</span>   <span class="hljs-comment">; 绝对跳转，跳到链接地址去，就是跳去内存里执行</span><br><span class="hljs-keyword">BLX</span> <span class="hljs-built_in">R0</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="七、重定位的纯C函数实现"><a href="#七、重定位的纯C函数实现" class="headerlink" title="七、重定位的纯C函数实现"></a>七、重定位的纯C函数实现</h1><h2 id="1-难点"><a href="#1-难点" class="headerlink" title="1. 难点"></a>1. 难点</h2><p>难点在于，怎么得到各个域的加载地址、链接地址、长度。</p>
+<ul>
+<li>方法1</li>
+</ul>
+<p>声明为外部变量，使用时<strong>需要</strong>使用取址符：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gams">extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base;<br>extern int Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base;<br>extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length;<br><br>memcpy(&amp;Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base, &amp;Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length, &amp;Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base);<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>方法2</li>
+</ul>
+<p>声明为外部数组，使用时<strong>不需要</strong>使用取址符：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs gams">extern char Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base[];<br>extern char Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base[];<br>extern int Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length;<br><br>memcpy(Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base, Image<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Length, &amp;Load<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>ER_IROM1<span class="hljs-symbol">$</span><span class="hljs-symbol">$</span>Base);<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-怎么理解上述代码"><a href="#2-怎么理解上述代码" class="headerlink" title="2. 怎么理解上述代码"></a>2. 怎么理解上述代码</h2><p> 对于这样的C变量：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> g_a;<br></code></pre></td></tr></table></figure>
+
+<p>编译的时候会有一个符号表(symbol table)，如下：</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Address</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>g_a</td>
+<td>xxxxxxxx</td>
+</tr>
+</tbody></table>
+<p>对于散列文件中的各类Symbol，有2中声明方式：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">extern</span> <span class="hljs-type">int</span> Image$$ER_IROM1$$Base;     <span class="hljs-comment">// 声明为一般变量</span><br><span class="hljs-keyword">extern</span> <span class="hljs-type">char</span> Image$$ER_IROM1$$Base[];  <span class="hljs-comment">// 声明为数组</span><br></code></pre></td></tr></table></figure>
+
+<p>不管是哪种方式，它们都会保存在符号表里，比如：</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Address</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>g_a</td>
+<td>xxxxxxxx</td>
+</tr>
+<tr>
+<td>Image$$ER_IROM1$$Base</td>
+<td>yyyyyyyy</td>
+</tr>
+</tbody></table>
+<ul>
+<li>对于<code>int g_a</code>变量<ul>
+<li>使用<code>&amp;g_a</code>得到符号表里的地址。</li>
+</ul>
+</li>
+<li>对于<code>extern int Image$$ER_IROM1$$Base</code>变量<ul>
+<li>要得到符号表中的地址，也是使用<code>&amp;Image$$ER_IROM1$$Base</code>。</li>
+</ul>
+</li>
+<li>对于<code>extern char Image$$ER_IROM1$$Base[]</code>变量<ul>
+<li>要得到符号表中的地址，直接使用<code>Image$$ER_IROM1$$Base</code>，不需要加<code>&amp;</code></li>
+<li>为什么？mage$$ER_IROM1$$Base本身就表示地址啊</li>
+</ul>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/STM32/" class="category-chain-item">STM32</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B1%87%E7%BC%96/" class="print-no-link">#汇编</a>
+      
+        <a href="/tags/%E6%9E%B6%E6%9E%84/" class="print-no-link">#架构</a>
+      
+        <a href="/tags/STM32/" class="print-no-link">#STM32</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>代码重定位</div>
+      <div>http://example.com/2023/10/23/代码重定位/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>xiaoyuzi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/10/27/%E9%93%BE%E8%A1%A8/" title="链表">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">链表</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/06/16/stm32mp157%E5%90%AF%E5%8A%A8%E5%8F%8A%E7%A7%BB%E6%A4%8D/" title="stm32mp157启动及移植">
+                        <span class="hidden-mobile">stm32mp157启动及移植</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
