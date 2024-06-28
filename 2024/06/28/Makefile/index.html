@@ -1,0 +1,892 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/start.png">
+  <link rel="icon" href="/img/start.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#525062">
+  <meta name="author" content="xiaoyuzi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Makefile基本使用方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Makefile">
+<meta property="og:url" content="http://example.com/2024/06/28/Makefile/index.html">
+<meta property="og:site_name" content="xyz_blog">
+<meta property="og:description" content="Makefile基本使用方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-28T12:22:14.033Z">
+<meta property="article:modified_time" content="2024-03-19T10:03:25.166Z">
+<meta property="article:author" content="xiaoyuzi">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="驱动">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Makefile - xyz_blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>小宇子_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/b.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Makefile"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-28 20:22" pubdate>
+          2024年6月28日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Makefile</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-Makefile的引入及规则"><a href="#1-Makefile的引入及规则" class="headerlink" title="1 Makefile的引入及规则"></a>1 Makefile的引入及规则</h1><p>使用keil, mdk,avr等工具开发程序时点击鼠标就可以编译了，它的内部机制是什么？它怎么组织管理程序？怎么决定编译哪一个文件？</p>
+<p>答：实际上windows工具管理程序的内部机制，也是Makefile，我们在linux下来开发裸板程序的时候，使用Makefile组织管理这些程序，本节我们来讲解Makefile最基本的规则。Makefile要做什么事情呢？<br>组织管理程序，组织管理文件，我们写一个程序来实验一下：</p>
+<p>文件a.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-number">02</span>	<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-number">03</span><br><span class="hljs-number">04</span>	<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span><br>05	&#123;<br><span class="hljs-number">06</span>	func_b();<br><span class="hljs-number">07</span>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><span class="hljs-number">08</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>文件b.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-number">2</span>	<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-number">3</span><br><span class="hljs-number">4</span>	<span class="hljs-type">void</span> <span class="hljs-title function_">func_b</span><span class="hljs-params">()</span><br>5	&#123;<br><span class="hljs-number">6</span>		<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;This is B\n&quot;</span>);<br><span class="hljs-number">7</span>	&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编译：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc -o <span class="hljs-built_in">test</span> a.c b.c<br></code></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./test<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">This is B<br></code></pre></td></tr></table></figure>
+
+<p><strong>gcc -o test a.c b.c</strong>  这条命令虽然简单，但是它完成的功能不简单。</p>
+<p>我们来看看它做了哪些事情，</p>
+<p>我们知道.c程序  &#x3D;&#x3D;》 得到可执行程序它们之间要经过四个步骤：</p>
+<ul>
+<li>1.预处理</li>
+<li>2.编译</li>
+<li>3.汇编</li>
+<li>4.链接</li>
+</ul>
+<p>我们经常把前三个步骤统称为编译了。我们具体分析：gcc -o test a.c b.c这条命令<br>它们要经过下面几个步骤：</p>
+<ul>
+<li>1）对于<strong>a.c</strong>：执行：预处理 编译 汇编 的过程，<strong>a.c &#x3D;&#x3D;&gt;xxx.s &#x3D;&#x3D;&gt;xxx.o</strong> 文件。</li>
+<li>2）对于<strong>b.c</strong>：执行：预处理 编译 汇编 的过程，<strong>b.c &#x3D;&#x3D;&gt;yyy.s &#x3D;&#x3D;&gt;yyy.o</strong> 文件。</li>
+<li>3）最后：<strong>xxx.o</strong>和<strong>yyy.o</strong>链接在一起得到一个<strong>test</strong>应用程序。</li>
+</ul>
+<p>提示：<strong>gcc -o test a.c b.c -v</strong> ：加上一个<strong>‘-v’</strong>选项可以看到它们的处理过程，</p>
+<p>第一次编译 a.c 得到 xxx.o 文件，这是很合乎情理的， 执行完第一次之后，如果修改 a.c 又再次执行：<strong>gcc -o test a.c b.c</strong>，对于 a.c 应该重新生成 xxx.o，但是对于 b.c 又会重新编译一次，这完全没有必要，b.c 根本没有修改，直接使用第一次生成的 yyy.o 文件就可以了。</p>
+<p>缺点：对所有的文件都会再处理一次，即使 b.c 没有经过修改，b.c 也会重新编译一次，当文件比较少时，这没有没有什么问题，当文件非常多的时候，就会带来非常多的效率问题如果文件非常多的时候，我们，只是修改了一个文件，所用的文件就会重新处理一次，编译的时候就会等待很长时间。</p>
+<p>对于这些源文件，我们应该分别处理，执行：预处理 编译 汇编，先分别编译它们，最后再把它们链接在一次，比如：</p>
+<p>编译：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc -o a.o a.c<br>gcc -o b.o b.c<br></code></pre></td></tr></table></figure>
+
+<p>链接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc -o <span class="hljs-built_in">test</span> a.o b.o<br></code></pre></td></tr></table></figure>
+
+<p>比如：上面的例子，当我们修改a.c之后,a.c会重现编译然后再把它们链接在一起就可以了。b.c<br>就不需要重新编译。</p>
+<p>那么问题又来了，怎么知道哪些文件被更新了&#x2F;被修改了？</p>
+<p>比较时间：比较 a.o 和 a.c 的时间，如果a.c的时间比 a.o 的时间更加新的话，就表明 a.c 被修改了，同理b.o和b.c也会进行同样的比较。比较test和 a.o,b.o 的时间，如果a.o或者b.o的时间比test更加新的话，就表明应该重新生成test。Makefile<br>就是这样做的。我们现在来写出一个简单的Makefile:</p>
+<p>makefie最基本的语法是规则，规则：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">目标 : 依赖1 依赖2 ...<br>[TAB]命令<br></code></pre></td></tr></table></figure>
+
+<p>当“依赖”比“目标”新，执行它们下面的命令。我们要把上面三个命令写成makefile规则，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">test</span> ：a.o b.o  //test是目标，它依赖于a.o b.o文件，一旦a.o或者b.o比<span class="hljs-built_in">test</span>新的时候，<br>就需要执行下面的命令，重新生成<span class="hljs-built_in">test</span>可执行程序。<br>gcc -o <span class="hljs-built_in">test</span> a.o b.o<br>a.o : a.c  //a.o依赖于a.c，当a.c更加新的话，执行下面的命令来生成a.o<br>gcc -c -o a.o a.c<br>b.o : b.c  //b.o依赖于b.c,当b.c更加新的话，执行下面的命令，来生成b.o<br>gcc -c -o b.o b.c<br></code></pre></td></tr></table></figure>
+
+<p>我们来作一下实验：</p>
+<p>在改目录下我们写一个Makefile文件：</p>
+<p>文件：Makefile</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Makefile">1	test:a.o b.o<br>2		gcc -o test a.o b.o<br>3	<br>4	a.o : a.c<br>5		gcc -c -o a.o a.c<br>6<br>7	b.o : b.c<br>8		gcc -c -o b.o b.c<br></code></pre></td></tr></table></figure>
+
+<p>上面是makefile中的三条规则。makefile,就是名字为“makefile”的文件。当我们想编译程序时，直接执行make命令就可以了，一执行make命令它想生成第一个目标test可执行程序,<br>如果发现a.o 或者b.o没有，就要先生成a.o或者b.o，发现a.o依赖a.c，有a.c但是没有a.o,他就会认为a.c比a.o新，就会执行它们下面的命令来生成a.o，同理b.o和b.c的处理关系也是这样的。</p>
+<p>如果修改a.c ，我们再次执行make，它的本意是想生成第一个目标test应用程序,它需要先生成a.o,发现a.o依赖a.c(执行我们修改了a.c)发现a.c比a.o更加新，就会执行gcc -c -o a.o<br>a.c命令来生成a.o文件。b.o依赖b.c，发现b.c并没有修改，就不会执行gcc -c -o b.o<br>b.c来重新生成b.o文件。现在a.o b.o都有了，其中的a.o比test更加新，就会执行 gcc -o<br>test a.ob.o来重新链接得到test可执行程序。所以当执行make命令时候就会执行下面两条执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc -c -o a.o a.c<br>gcc -o <span class="hljs-built_in">test</span> a.o b.o<br></code></pre></td></tr></table></figure>
+
+<p>我们第一次执行make的时候，会执行下面三条命令(三条命令都执行)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc -c -o a.o a.c<br>gcc -c -o b.o b.c<br>gcc -o <span class="hljs-built_in">test</span> a.o b.o<br></code></pre></td></tr></table></figure>
+
+<p>再次执行make 就会显示下面的提示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">make: `<span class="hljs-built_in">test</span><span class="hljs-string">&#x27; is up to date.</span><br></code></pre></td></tr></table></figure>
+
+<p>我们再次执行make就会判断Makefile文件中的依赖，发现依赖没有更新，所以目标文件就不会重现生成，就会有上面的提示。当我们修改a.c后，重新执行make,</p>
+<p>就会执行下面两条指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ash">gcc -c -o a.o a.c<br>gcc -o test a.o b.o<br></code></pre></td></tr></table></figure>
+
+<p>我们同时修改a.c b.c，执行make就会执行下面三条指令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc -c -o a.o a.c<br>gcc -c -o b.o b.c<br>gcc -o <span class="hljs-built_in">test</span> a.o b.o<br></code></pre></td></tr></table></figure>
+
+<p>a.c文件修改了，重新编译生成a.o, b.c修改了重新编译生成b.o，a.o,b.o都更新了重新链接生成test可执行程序，makefile的规则其实还是比较简单的。规则是Makefie的核心，</p>
+<p>执行make命令的时候，就会在当前目录下面找到名字为：Makefile的文件，根据里面的内容来执行里面的判断&#x2F;命令。</p>
+<h1 id="2-Makefile的语法"><a href="#2-Makefile的语法" class="headerlink" title="2 Makefile的语法"></a>2 Makefile的语法</h1><p>本节我们只是简单的讲解Makefile的语法，如果想比较深入学习Makefile的话可以：</p>
+<ul>
+<li>a. 百度搜 “gnu make 于凤昌”。</li>
+<li>b. 查看官方文档: <a target="_blank" rel="noopener" href="http://www.gnu.org/software/make/manual/">http://www.gnu.org/software/make/manual/</a></li>
+</ul>
+<h2 id="a-通配符"><a href="#a-通配符" class="headerlink" title="a. 通配符"></a>a. 通配符</h2><p>假如一个目标文件所依赖的依赖文件很多，那样岂不是我们要写很多规则，这显然是不合乎常理的</p>
+<p>我们可以使用通配符，来解决这些问题。</p>
+<p>我们对上节程序进行修改代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">test</span>: a.o b.o <br>	gcc -o <span class="hljs-built_in">test</span> $^<br>	<br>%.o : %.c<br>	gcc -c -o <span class="hljs-variable">$@</span> $&lt;<br></code></pre></td></tr></table></figure>
+
+<p>%.o：表示所用的.o文件</p>
+<p>%.c：表示所有的.c文件</p>
+<p>$@：表示目标</p>
+<p>$&lt;：表示第1个依赖文件</p>
+<p>$^：表示所有依赖文件</p>
+<p>我们来在该目录下增加一个 c.c 文件，代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#include &lt;stdio.h&gt;</span><br><br>void <span class="hljs-function"><span class="hljs-title">func_c</span></span>()<br>&#123;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;This is C\n&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后在main函数中调用修改Makefile，修改后的代码如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">test</span>: a.o b.o c.o<br>	gcc -o <span class="hljs-built_in">test</span> $^<br>	<br>%.o : %.c<br>	gcc -c -o <span class="hljs-variable">$@</span> $&lt;<br></code></pre></td></tr></table></figure>
+
+<p>执行： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">make<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">gcc -c -o a.o a.c<br>gcc -c -o b.o b.c<br>gcc -c -o c.o c.c<br>gcc -o <span class="hljs-built_in">test</span> a.o b.o c.o<br></code></pre></td></tr></table></figure>
+
+<p>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./test<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">This is B<br>This is C<br></code></pre></td></tr></table></figure>
+
+<h2 id="b-假想目标-PHONY"><a href="#b-假想目标-PHONY" class="headerlink" title="b. 假想目标: .PHONY"></a>b. 假想目标: .PHONY</h2><p>1.我们想清除文件，我们在Makefile的结尾添加如下代码就可以了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">clean:<br>	<span class="hljs-built_in">rm</span> *.o <span class="hljs-built_in">test</span><br></code></pre></td></tr></table></figure>
+
+<p>*1）执行 make ：生成第一个可执行文件。<br>*2）执行 make clean : 清除所有文件，即执行： rm *.o test。</p>
+<p>make后面可以带上目标名，也可以不带，如果不带目标名的话它就想生成第一个规则里面的第一个目标。</p>
+<p>2.使用Makefile</p>
+<p>执行：<strong>make [目标]</strong> 也可以不跟目标名，若无目标默认第一个目标。我们直接执行make的时候，会在makefile里面找到第一个目标然后执行下面的指令生成第一个目标。当我们执行 make clean 的时候，就会在 Makefile 里面找到 clean 这个目标，然后执行里面的命令，这个写法有些问题，原因是我们的目录里面没有 clean 这个文件，这个规则执行的条件成立，他就会执行下面的命令来删除文件。</p>
+<p>如果：该目录下面有名为clean文件怎么办呢？</p>
+<p>我们在该目录下创建一个名为 “clean” 的文件，然后重新执行：make然后make<br>clean，结果(会有下面的提示：)：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">make: \`clean<span class="hljs-string">&#x27; is up to date.</span><br></code></pre></td></tr></table></figure>
+
+<p>它根本没有执行我们的删除操作，这是为什么呢？</p>
+<p>我们之前说，一个规则能过执行的条件：</p>
+<p>*1)目标文件不存在<br>*2)依赖文件比目标新</p>
+<p>现在我们的目录里面有名为“clean”的文件，目标文件是有的，并且没有依赖文件，没有办法判断依赖文件的时间。这种写法会导致：有同名的”clean”文件时，就没有办法执行make clean操作。解决办法：我们需要把目标定义为假象目标，用关键子PHONY</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">.PHONY: clean //把clean定义为假象目标。他就不会判断名为“clean”的文件是否存在，<br></code></pre></td></tr></table></figure>
+
+<p>然后在Makfile结尾添加.PHONY: clean语句，重新执行：make clean，就会执行删除操作。</p>
+<h2 id="C-变量"><a href="#C-变量" class="headerlink" title="C. 变量"></a>C. 变量</h2><p>在makefile中有两种变量：</p>
+<p>1), 简单变量(即使变量)：</p>
+<p>A :&#x3D; xxx    # A的值即刻确定，在定义时即确定</p>
+<p>对于即使变量使用 “:&#x3D;” 表示，它的值在定义的时候已经被确定了</p>
+<p>2）延时变量</p>
+<p>B &#x3D; xxx   # B的值使用到时才确定</p>
+<p>对于延时变量使用“&#x3D;”表示。它只有在使用到的时候才确定，在定义&#x2F;等于时并没有</p>
+<p>确定下来。</p>
+<p>想使用变量的时候使用“$”来引用，如果不想看到命令是，可以在命令的前面加上”@“符号，就不会显示命令本身。当我们执行make命令的时候，make这个指令本身，会把整个Makefile读进去，进行全部分析，然后解析里面的变量。常用的变量的定义如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">:= <span class="hljs-comment"># 即时变量</span><br>= <span class="hljs-comment"># 延时变量</span><br>?= <span class="hljs-comment"># 延时变量, 如果是第1次定义才起效, 如果在前面该变量已定义则忽略这句</span><br>\+= <span class="hljs-comment"># 附加, 它是即时变量还是延时变量取决于前面的定义</span><br>?=: 如果这个变量在前面已经被定义了，这句话就会不会起效果，<br></code></pre></td></tr></table></figure>
+
+<p>实例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">A := $(C)<br>B = $(C)<br>C = abc<br><br><span class="hljs-comment">#D = 100ask</span><br>D ?= weidongshan<br><br>all:<br>	@<span class="hljs-built_in">echo</span> A = $(A)<br>	@<span class="hljs-built_in">echo</span> B = $(B)<br>	@<span class="hljs-built_in">echo</span> D = $(D)<br><br>C += 123<br></code></pre></td></tr></table></figure>
+
+<p>执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">make<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">A =<br>B = abc 123<br>D = weidongshan<br></code></pre></td></tr></table></figure>
+
+<p>分析：</p>
+<ol>
+<li>A :&#x3D; $(C)：</li>
+</ol>
+<p>A为即使变量，在定义时即确定，由于刚开始C的值为空，所以A的值也为空。</p>
+<ol start="2">
+<li><p>B &#x3D; $(C)：<br>B为延时变量，只有使用到时它的值才确定，当执行make时，会解析Makefile里面的所用变量，所以先解析C&#x3D; abc,然后解析C +&#x3D; 123，此时，C &#x3D; abc 123，当执行：@echo B &#x3D; $(B) B的值为 abc 123。</p>
+</li>
+<li><p>D ?&#x3D; weidongshan：</p>
+</li>
+</ol>
+<p>D变量在前面没有定义，所以D的值为weidongshan，如果在前面添加D &#x3D; 100ask，最后D的值为100ask。</p>
+<p>我们还可以通过命令行存入变量的值 例如：</p>
+<p>执行：make D&#x3D;123456 里面的 D ?&#x3D; weidongshan 这句话就不起作用了。</p>
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">A =<br>B = abc 123<br>D = 123456<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="3-Makefile函数"><a href="#3-Makefile函数" class="headerlink" title="3 Makefile函数"></a>3 Makefile函数</h1><p>makefile里面可以包含很多函数，这些函数都是make本身实现的，下面我们来几个常用的函数。引用一个函数用“$”。</p>
+<h2 id="函数foreach"><a href="#函数foreach" class="headerlink" title="函数foreach"></a>函数foreach</h2><p>函数foreach语法如下： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$(foreach var,list,text) <br></code></pre></td></tr></table></figure>
+
+<p>前两个参数，‘var’和‘list’，将首先扩展，注意最后一个参数 ‘text’ 此时不扩展；接着，对每一个 ‘list’ 扩展产生的字，将用来为 ‘var’ 扩展后命名的变量赋值；然后 ‘text’ 引用该变量扩展；因此它每次扩展都不相同。结果是由空格隔开的 ‘text’。在 ‘list’ 中多次扩展的字组成的新的 ‘list’。‘text’ 多次扩展的字串联起来，字与字之间由空格隔开，如此就产生了函数 foreach 的返回值。</p>
+<p>实例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">A = a b c<br>B = $(foreach f, &amp;(A), $(f).o)<br><br>all:<br>	@<span class="hljs-built_in">echo</span> B = $(B)<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">B = a.o b.o c.o<br></code></pre></td></tr></table></figure>
+
+<h2 id="函数filter-filter-out"><a href="#函数filter-filter-out" class="headerlink" title="函数filter&#x2F;filter-out"></a>函数filter&#x2F;filter-out</h2><p>函数filter&#x2F;filter-out语法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$(filter pattern...,text)     <span class="hljs-comment"># 在text中取出符合patten格式的值</span><br>$(filter-out pattern...,text) <span class="hljs-comment"># 在text中取出不符合patten格式的值</span><br></code></pre></td></tr></table></figure>
+
+<p>实例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">C = a b c d/<br><br>D = $(filter %/, $(C))<br>E = $(filter-out %/, $(C))<br><br>all:<br>        @<span class="hljs-built_in">echo</span> D = $(D)<br>        @<span class="hljs-built_in">echo</span> E = $(E)<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">D = d/<br>E = a b c<br></code></pre></td></tr></table></figure>
+
+<h2 id="Wildcard"><a href="#Wildcard" class="headerlink" title="Wildcard"></a>Wildcard</h2><p>函数Wildcard语法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$(wildcard pattern) <span class="hljs-comment"># pattern定义了文件名的格式, wildcard取出其中存在的文件。</span><br></code></pre></td></tr></table></figure>
+
+<p>这个函数 wildcard 会以 pattern 这个格式，去寻找存在的文件，返回存在文件的名字。</p>
+<p>实例：</p>
+<p>在该目录下创建三个文件：a.c b.c c.c</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">files = $(wildcard *.c)<br><br>all:<br>        @<span class="hljs-built_in">echo</span> files = $(files)<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">files = a.c b.c c.c<br></code></pre></td></tr></table></figure>
+
+<p>我们也可以用wildcard函数来判断，真实存在的文件</p>
+<p>实例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">files2 = a.c b.c c.c d.c e.c  abc<br>files3 = $(wildcard $(files2))<br><br>all:<br>        @<span class="hljs-built_in">echo</span> files3 = $(files3)<br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">files3 = a.c b.c c.c<br></code></pre></td></tr></table></figure>
+
+<h2 id="patsubst函数"><a href="#patsubst函数" class="headerlink" title="patsubst函数"></a>patsubst函数</h2><p>函数 patsubst 语法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$(patsubst pattern,replacement,\$(var))<br></code></pre></td></tr></table></figure>
+
+<p>patsubst 函数是从 var 变量里面取出每一个值，如果这个符合 pattern 格式，把它替换成 replacement 格式，</p>
+<p>实例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">files2  = a.c b.c c.c d.c e.c abc<br><br>dep_files = $(patsubst %.c,%.d,$(files2))<br><br>all:<br>        @<span class="hljs-built_in">echo</span> dep_files = $(dep_files)<br><br></code></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">dep_files = a.d b.d c.d d.d e.d abc<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="4-Makefile实例"><a href="#4-Makefile实例" class="headerlink" title="4 Makefile实例"></a>4 Makefile实例</h1><p>前面讲了那么多Makefile的知识，现在开始做一个实例。<br>在<code>c.c</code>里面，包含一个头文件<code>c.h</code>，在<code>c.h</code>里面定义一个宏，把这个宏打印出来。<br>c.c:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;c.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func_c</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;This is C = %d\n&quot;</span>, C);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>c.h:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">define</span> C 1</span><br></code></pre></td></tr></table></figure>
+
+<p>然后上传编译，执行<code>./test</code>,打印出：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">This <span class="hljs-keyword">is</span> B<br>This <span class="hljs-keyword">is</span> C =<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<p>测试没有问题，然后修改<code>c.h</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">define</span> C 2</span><br></code></pre></td></tr></table></figure>
+
+<p>重新编译，发现没有更新程序，运行，结果不变，说明现在的Makefile存在问题。</p>
+<p>为什么会出现这个问题呢， 首先我们test依赖c.o，c.o依赖c.c，如果我们更新c.c，会重新更新整个程序。<br>但c.o也依赖c.h，我们更新了c.h，并没有在Makefile上体现出来，导致c.h的更新，Makefile无法检测到。<br>因此需要添加:</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-keyword">c</span>.o : <span class="hljs-keyword">c</span>.<span class="hljs-keyword">c</span> <span class="hljs-keyword">c</span>.h<br></code></pre></td></tr></table></figure>
+
+<p>现在每次修改c.h，Makefile都能识别到更新操作，从而更新最后输出文件。</p>
+<p>这样又冒出了一个新的问题，我们怎么为每个.c文件添加.h文件呢？对于内核，有几万个文件，不可能为每个文件依次写出其头文件。<br>因此需要做出改进，让其自动生成头文件依赖，可以参考这篇文章：<a target="_blank" rel="noopener" href="http://blog.csdn.net/qq1452008/article/details/50855810">http://blog.csdn.net/qq1452008/article/details/50855810</a></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus">gcc -M c<span class="hljs-selector-class">.c</span> <span class="hljs-comment">// 打印出依赖</span><br><br>gcc -M -MF c<span class="hljs-selector-class">.d</span> c<span class="hljs-selector-class">.c</span>  <span class="hljs-comment">// 把依赖写入文件c.d</span><br><br>gcc -c -o c<span class="hljs-selector-class">.o</span> c<span class="hljs-selector-class">.c</span> -MD -MF c<span class="hljs-selector-class">.d</span>  <span class="hljs-comment">// 编译c.o, 把依赖写入文件c.d</span><br></code></pre></td></tr></table></figure>
+
+<p>修改Makefile如下：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs makefile">objs = a.o b.o c.o<br><br>dep_files := <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> %,.%.d, <span class="hljs-variable">$(objs)</span>)</span><br>dep_files := <span class="hljs-variable">$(<span class="hljs-built_in">wildcard</span> <span class="hljs-variable">$(dep_files)</span>)</span><br><br><span class="hljs-section">test: <span class="hljs-variable">$(objs)</span></span><br>	gcc -o test <span class="hljs-variable">$^</span><br><br><span class="hljs-keyword">ifneq</span> (<span class="hljs-variable">$(dep_files)</span>,)<br><span class="hljs-keyword">include</span> <span class="hljs-variable">$(dep_files)</span><br><span class="hljs-keyword">endif</span><br><br>%.o : %.c<br>	gcc -c -o <span class="hljs-variable">$@</span> <span class="hljs-variable">$&lt;</span> -MD -MF .<span class="hljs-variable">$@</span>.d<br><br><span class="hljs-section">clean:</span><br>	rm *.o test<br><br><span class="hljs-section">distclean:</span><br>	rm <span class="hljs-variable">$(dep_files)</span><br>	<br><span class="hljs-meta"><span class="hljs-keyword">.PHONY</span>: clean	</span><br></code></pre></td></tr></table></figure>
+
+<p>首先用obj变量将.o文件放在一块。<br>利用前面讲到的函数，把obj里所有文件都变为.%.d格式，并用变量dep_files表示。<br>利用前面介绍的wildcard函数，判断dep_files是否存在。<br>然后是目标文件test依赖所有的.o文件。<br>如果dep_files变量不为空，就将其包含进来。<br>然后就是所有的.o文件都依赖.c文件，且通过-MD -MF生成.d依赖文件。<br>清理所有的.o文件和目标文件<br>清理依赖.d文件。</p>
+<p>现在我门修改了任何.h文件，最终都会影响最后生成的文件，也没任何手工添加.h、.c、.o文件，完成了支持头文件依赖。</p>
+<p>下面再添加CFLAGS，即编译参数。比如加上编译参数-Werror，把所有的警告当成错误。</p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mel">CFLAGS = -Werror -Iinclude<br><br>…………<br><br><br>%.o : %.c<br>	gcc $(CFLAGS) -c -o $@ $&lt; -MD -MF .$@.d<br></code></pre></td></tr></table></figure>
+
+<p>现在重新make，发现以前的警告就变成了错误，必须要解决这些错误编译才能进行。在<code>a.c</code>里面声明一下函数：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func_b</span>()</span>;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func_c</span>()</span>;<br></code></pre></td></tr></table></figure>
+
+<p>重新make，错误就没有了。</p>
+<p>除了编译参数-Werror，还可以加上-I参数，指定头文件路径，-Iinclude表示当前的inclue文件夹下。<br>此时就可以把c.c文件里的<code>#include &quot;.h&quot;</code>改为<code>#include &lt;c.h&gt;</code>，前者表示当前目录，后者表示编译器指定的路径和GCC路径。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+        <a href="/tags/%E9%A9%B1%E5%8A%A8/" class="print-no-link">#驱动</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Makefile</div>
+      <div>http://example.com/2024/06/28/Makefile/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>xiaoyuzi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/28/GCC%E7%BC%96%E8%AF%91%E5%99%A8%E8%AF%A6%E8%A7%A3/" title="GCC编译器详解">
+                        <span class="hidden-mobile">GCC编译器详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
