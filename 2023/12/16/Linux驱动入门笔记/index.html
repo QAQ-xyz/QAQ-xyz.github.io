@@ -16,45 +16,20 @@
   <meta name="author" content="xiaoyuzi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1 单片机和Linux程序从上层到底层的比较1 程序比较 单片机程序 12345int main()&#123;	HAL库 &#x2F; 寄存器操作	&#x2F;&#x2F;直接操作硬件	R&#x2F;W寄存器			  &#x2F;&#x2F;可以直接读写寄存器&#125;  Linux程序 1234567891011应用程序：int main()&#123;	无法直接R&#x2F;W寄存器			  &#x2F;&#x2F;不可以直接读写寄存器，因为有MMU，禁止直接访问内存	调用驱动">
+    <meta name="description" content="Linux内核驱动入门总结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux驱动入门笔记">
-<meta property="og:url" content="http://example.com/2024/06/28/Linux%E9%A9%B1%E5%8A%A8%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:url" content="http://example.com/2023/12/16/Linux%E9%A9%B1%E5%8A%A8%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="xyz_blog">
-<meta property="og:description" content="1 单片机和Linux程序从上层到底层的比较1 程序比较 单片机程序 12345int main()&#123;	HAL库 &#x2F; 寄存器操作	&#x2F;&#x2F;直接操作硬件	R&#x2F;W寄存器			  &#x2F;&#x2F;可以直接读写寄存器&#125;  Linux程序 1234567891011应用程序：int main()&#123;	无法直接R&#x2F;W寄存器			  &#x2F;&#x2F;不可以直接读写寄存器，因为有MMU，禁止直接访问内存	调用驱动">
+<meta property="og:description" content="Linux内核驱动入门总结">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/photo/image-20231121150452014.png">
-<meta property="og:image" content="http://example.com/photo/image-20231121160513624.png">
-<meta property="og:image" content="http://example.com/photo/image-20231121154233396.png">
-<meta property="og:image" content="http://example.com/photo/image-20231121160006224.png">
-<meta property="og:image" content="http://example.com/photo/image-20231121185750327.png">
-<meta property="og:image" content="http://example.com/photo/image-20231121190133851.png">
-<meta property="og:image" content="http://example.com/photo/image-20231121211955147.png">
-<meta property="og:image" content="http://example.com/photo/image-20231121220113106.png">
-<meta property="og:image" content="http://example.com/photo/image-20231124155738845.png">
-<meta property="og:image" content="http://example.com/photo/image-20231124214601939.png">
-<meta property="og:image" content="http://example.com/photo/01_sr04_sch.png">
-<meta property="og:image" content="http://example.com/photo/image-20231125155404835.png">
-<meta property="og:image" content="http://example.com/photo/01_sch.png">
-<meta property="og:image" content="http://example.com/photo/02_operaions.png">
-<meta property="og:image" content="http://example.com/photo/03_dht11_time.png">
-<meta property="og:image" content="http://example.com/photo/04_config_dht11_kernel.png">
-<meta property="og:image" content="http://example.com/photo/01_sch-1701156562752.png">
-<meta property="og:image" content="http://example.com/photo/02_start_and_ack.png">
-<meta property="og:image" content="http://example.com/photo/03_write_bit.png">
-<meta property="og:image" content="http://example.com/photo/04_read_bit.png">
-<meta property="og:image" content="http://example.com/photo/01_sch-1701229404264.png">
-<meta property="og:image" content="http://example.com/photo/02_data_seq.png">
-<meta property="og:image" content="http://example.com/photo/03_pre_wave.png">
-<meta property="og:image" content="http://example.com/photo/04_data_wave.png">
-<meta property="og:image" content="http://example.com/photo/05_repeat_wave.png">
-<meta property="og:image" content="http://example.com/photo/06_use_irq.png">
-<meta property="article:published_time" content="2024-06-28T13:39:15.206Z">
-<meta property="article:modified_time" content="2024-06-28T13:42:25.342Z">
+<meta property="og:image" content="http://example.com/logo/Linux%E5%86%85%E6%A0%B8%E9%A9%B1%E5%8A%A8.png">
+<meta property="article:published_time" content="2023-12-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-06-30T14:41:11.001Z">
 <meta property="article:author" content="xiaoyuzi">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/photo/image-20231121150452014.png">
+<meta name="twitter:image" content="http://example.com/logo/Linux%E5%86%85%E6%A0%B8%E9%A9%B1%E5%8A%A8.png">
   
   
   
@@ -235,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-06-28 21:39" pubdate>
-          2024年6月28日 晚上
+        <time datetime="2023-12-16 00:00" pubdate>
+          2023年12月16日 凌晨
         </time>
       </span>
     
@@ -823,7 +798,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Linux驱动入门笔记</div>
-      <div>http://example.com/2024/06/28/Linux驱动入门笔记/</div>
+      <div>http://example.com/2023/12/16/Linux驱动入门笔记/</div>
     </div>
     <div class="license-meta">
       
@@ -835,7 +810,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年6月28日</div>
+          <div>2023年12月16日</div>
         </div>
       
       
@@ -867,9 +842,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/06/28/Linux%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8Eimx6ull/" title="Linux系统移植——基于imx6ull">
+                      <a href="/2024/03/01/PC%E6%80%A7%E8%83%BD%E6%A3%80%E6%B5%8B%E7%AB%99/" title="PC性能检测站">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Linux系统移植——基于imx6ull</span>
+                        <span class="hidden-mobile">PC性能检测站</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -877,8 +852,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/06/28/PC%E6%80%A7%E8%83%BD%E6%A3%80%E6%B5%8B%E7%AB%99/" title="PC性能检测站">
-                        <span class="hidden-mobile">PC性能检测站</span>
+                      <a href="/2023/12/11/GCC%E7%BC%96%E8%AF%91%E5%99%A8%E8%AF%A6%E8%A7%A3/" title="GCC编译器详解">
+                        <span class="hidden-mobile">GCC编译器详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
