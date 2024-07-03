@@ -56,6 +56,33 @@
   
   
   <entry>
+    <title>Git命令</title>
+    <link href="/2023/12/28/Git%E5%91%BD%E4%BB%A4/"/>
+    <url>/2023/12/28/Git%E5%91%BD%E4%BB%A4/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-Git命令"><a href="#1-Git命令" class="headerlink" title="1 Git命令"></a>1 Git命令</h1><h2 id="1-初始化本地仓库"><a href="#1-初始化本地仓库" class="headerlink" title="1 初始化本地仓库"></a>1 初始化本地仓库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs git">git init<br>git clone &lt;url&gt;<br></code></pre></td></tr></table></figure><h2 id="2-提交到暂存区"><a href="#2-提交到暂存区" class="headerlink" title="2 提交到暂存区"></a>2 提交到暂存区</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs git">git status//查看状态<br>git diff //查看变更内容<br>git add &lt;filename&gt;<br>git add .        //目录下的所有文件<br>git mv &lt;old&gt; &lt;new&gt; //修改文件名<br>git rm &lt;filename&gt; //删除文件<br></code></pre></td></tr></table></figure><h2 id="3-添加备注"><a href="#3-添加备注" class="headerlink" title="3 添加备注"></a>3 添加备注</h2><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">git</span> commit -m <span class="hljs-string">&quot;备注内容&quot;</span><br></code></pre></td></tr></table></figure><h2 id="4-查看提交节点"><a href="#4-查看提交节点" class="headerlink" title="4 查看提交节点"></a>4 查看提交节点</h2><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs 1c">git <span class="hljs-built_in">log</span> <br>git <span class="hljs-built_in">log</span> --stat   <span class="hljs-comment">//查看每次提交的时候修改了哪些文件</span><br></code></pre></td></tr></table></figure><h2 id="5-回溯"><a href="#5-回溯" class="headerlink" title="5 回溯"></a>5 回溯</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scss">git diff  <span class="hljs-selector-attr">[commit的id]</span>  <span class="hljs-comment">//查看具体修改了什么</span><br>git reset <span class="hljs-attr">--hard</span>  <span class="hljs-selector-attr">[commit的id]</span>   <span class="hljs-comment">//回溯</span><br></code></pre></td></tr></table></figure><h2 id="6-创建分支"><a href="#6-创建分支" class="headerlink" title="6 创建分支"></a>6 创建分支</h2><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs smali">git<span class="hljs-built_in"> check </span>-b develop//创建develop分支<br>git branch //查看分支<br>git checkout master//切换到master分支<br>git merge develop    //将develop分支的内容合并了master分支<br></code></pre></td></tr></table></figure><h2 id="7分支与标签"><a href="#7分支与标签" class="headerlink" title="7分支与标签"></a>7分支与标签</h2><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs lasso">git branch  <span class="hljs-comment">//显示所有本地分支</span><br>git checkout &lt;branch/<span class="hljs-built_in">tag</span>&gt;<span class="hljs-comment">//切换到指定分支或标签</span><br>git <span class="hljs-built_in">tag</span> <span class="hljs-comment">//列出所有本地标签</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>嵌入式</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>linux</tag>
+      
+      <tag>c</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux驱动入门笔记</title>
     <link href="/2023/12/16/Linux%E9%A9%B1%E5%8A%A8%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/"/>
     <url>/2023/12/16/Linux%E9%A9%B1%E5%8A%A8%E5%85%A5%E9%97%A8%E7%AC%94%E8%AE%B0/</url>
