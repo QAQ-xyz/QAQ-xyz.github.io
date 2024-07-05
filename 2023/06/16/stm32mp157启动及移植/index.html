@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/logo/stm32mp157.jpg">
 <meta property="article:published_time" content="2023-06-16T05:49:40.000Z">
-<meta property="article:modified_time" content="2024-06-27T10:13:27.804Z">
+<meta property="article:modified_time" content="2024-07-05T06:29:49.766Z">
 <meta property="article:author" content="xiaoyuzi">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/logo/stm32mp157.jpg">
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          750 字
+          3.1k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          7 分钟
+          26 分钟
         
       </span>
     
@@ -293,10 +293,162 @@
 </li>
 <li><p>在stm32mp157中启动流程是bootROM-&gt;TFA可信固件(FSBL)-&gt;uboot(SSBL)-&gt;linux-&gt;rootfs这里多出来一个TFA可信固件，主要是ARM为了针对CPU安全提出来的一种隔离方式启动，如果内部ROM鉴权失败，是不会启动后面的uboot一系列操作。</p>
 </li>
-<li><p>TFA源码介绍</p>
+</ul>
+<h1 id="2、基于SD卡移植"><a href="#2、基于SD卡移植" class="headerlink" title="2、基于SD卡移植"></a>2、基于SD卡移植</h1><h2 id="2-1SD卡初始化"><a href="#2-1SD卡初始化" class="headerlink" title="2&#x2F;1SD卡初始化"></a>2&#x2F;1SD卡初始化</h2><ul>
+<li><p>了解SD卡启动流程</p>
+<p>如果选择SD卡启动，由于SD卡内部没有像EMMC里面的boot1和boot2这样的引导分区，因此上电后内部ROM首先在SD卡上寻找GPT分区（这个就是分区记录表），找到后会去查找名字为’’fsb1’开始的两个FSBL分区，如果没找到就会直接根据物理偏移地址进行查找两个FSBL分区，第一个FSBL分区偏移地址为34个扇区，因此实际物理地址为：34*512&#x3D;0x4400.第二个FSBL偏移546个扇区，物理地址为：546 *512&#x3D;0x44400。但是切记，同一时间只有一个地址的FSBL有效。</p>
+</li>
+<li><p>为了确保万无一失，能让内部ROM能够找到FBSL，我们对SD卡进行如下的分区操作。</p>
+<p>首先安装磁盘操作工具：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt-get install gdisk<br></code></pre></td></tr></table></figure>
+
+<p>插入SD卡读卡器，检查系统磁盘,我的设备是sdb。可以在&#x2F;dev文件夹下面看到。我这里分区了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat /proc/partitions<br></code></pre></td></tr></table></figure>
+
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703161249.png" srcset="/img/loading.gif" lazyload alt="截图20240703161249"></p>
+<p>格式化SD卡，并且分区建立引导区。如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo sgdisk -Z -go /dev/sdb<br><span class="hljs-meta prompt_">#</span><span class="language-bash">建立5分区</span><br>sudo sgdisk --resize-table=128 -a 1 \<br>-n 1:34:545      -c 1:fsbl1 \<br>-n 2:546:1057    -c 2:fsbl2 \<br>-n 3:1058:5153   -c 3:ssbl \<br>-n 4:5154:136225 -c 4:bootfs \<br>-n 5:136226:     -c 5:rootfs \<br>-A 4:set:2 \<br>-p /dev/sdb -g<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>​	</p>
+<h2 id="2-2可信固件TFA移植"><a href="#2-2可信固件TFA移植" class="headerlink" title="2&#x2F;2可信固件TFA移植"></a>2&#x2F;2可信固件TFA移植</h2><ul>
+<li><p>我们移植半导体厂商提供的源码包，首先在ST官网获取源码。<a target="_blank" rel="noopener" href="https://www.st.com/en/embedded-software/stm32mp1dev.html">STM32MP1Dev - STM32MP1 OpenSTLinux Developer Package - STMicroelectronics</a>；里面包括TFA、Uboot、linux内核</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703163133.png" srcset="/img/loading.gif" lazyload alt="截图20240703163133"></p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703163959.png" srcset="/img/loading.gif" lazyload alt="截图20240703163959"></p>
+</li>
+<li><p>我们新建一个mysdk的文件，把需要的三个文件拷贝过去</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703164630.png" srcset="/img/loading.gif" lazyload alt="截图20240703164630"></p>
+</li>
+<li><p>进入TFA源码，修改Makefile.sdk文件，换成我们的自己的工具链。arm-none-linux-guneabihf</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703165613.png" srcset="/img/loading.gif" lazyload alt="截图20240703165613"></p>
+</li>
+<li><p>再就是修改设备树文件。这里注意TFA就开始用设备树了，改设备树具体改哪些，根据不同配置来改，根据官网提供的核心板子来修改，哪里用的外设不同，就改哪里。</p>
+</li>
+<li><p>make后，直接会生成build目录，目录下的build&#x2F;trusted目录下，使用dd命令tfa放入SD卡的fsbl1和fsbl2分区里面：</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703180811.png" srcset="/img/loading.gif" lazyload alt="截图20240703180811"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo dd if=tf-a-stm32mp157d-ev1-trusted.stm32 of=/dev/sdb1 bs=1M conv=fdatasync<br>sudo dd if=tf-a-stm32mp157d-ev1-trusted.stm32 of=/dev/sdb2 bs=1M conv=fdatasync<br>//这里是以防万一，fsbl1和fsbl2区都烧写了，这样防止找不到。<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>选择SD卡启动，插好串口，打开串口工具。上电，可以发现报错，缺少第二阶段的启动文件。这里就是uboot。下面就将移植好的uboot放入SD卡分区中。</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703180628.png" srcset="/img/loading.gif" lazyload alt="截图20240703180628"></p>
+</li>
+<li><p>还是使用dd命令来，将编译好的uboot源码放入到SD卡ssbl区</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703182042.png" srcset="/img/loading.gif" lazyload alt="截图20240703182042"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo dd if=u-boot.stm32 of=/dev/sdb3 conv=fdatasync<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>再次插入SD卡，上电启动，可以看到uboot正常启动了，但是由于没有内核和根文件系统，所以不能成功启动。但是我们回车键后，可以进入uboot命令行模式。</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703183153.png" srcset="/img/loading.gif" lazyload alt="截图20240703183153"></p>
 </li>
 </ul>
-<h1 id="2、SD卡移植"><a href="#2、SD卡移植" class="headerlink" title="2、SD卡移植"></a>2、SD卡移植</h1>
+<h2 id="2-3u-boot命令使用"><a href="#2-3u-boot命令使用" class="headerlink" title="2&#x2F;3u-boot命令使用"></a>2&#x2F;3u-boot命令使用</h2><ul>
+<li><p>在命令行可以输入help或者？来查看裁剪后，支持的命令。有一下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><code class="hljs shell">?         - alias for &#x27;help&#x27;<br>adc       - ADC sub-system<br>base      - print or set address offset<br>bdinfo    - print Board Info structure<br>blkcache  - block cache diagnostics and control<br>bmp       - manipulate BMP image data<br>boot      - boot default, i.e., run &#x27;bootcmd&#x27;<br>bootcount - bootcount<br>bootd     - boot default, i.e., run &#x27;bootcmd&#x27;<br>bootefi   - Boots an EFI payload from memory<br>bootm     - boot application image from memory<br>bootp     - boot image via network using BOOTP/TFTP protocol<br>bootstage - Boot stage command<br>bootz     - boot Linux zImage image from memory<br>chpart    - change active partition<br>clk       - CLK sub-system<br>cls       - clear screen<br>cmp       - memory compare<br>coninfo   - print console devices and information<br>cp        - memory copy<br>crc32     - checksum calculation<br>date      - get/set/reset date &amp; time<br>dcache    - enable or disable data cache<br>dfu       - Device Firmware Upgrade<br>dhcp      - boot image via network using DHCP/TFTP protocol<br>dm        - Driver model low level access<br>dtimg     - manipulate dtb/dtbo Android image<br>echo      - echo args to console<br>editenv   - edit environment variable<br>env       - environment handling commands<br>erase     - erase FLASH memory<br>eraseenv  - erase environment variables from persistent storage<br>exit      - exit script<br>ext2load  - load binary file from a Ext2 filesystem<br>ext2ls    - list files in a directory (default /)<br>ext4load  - load binary file from a Ext4 filesystem<br>ext4ls    - list files in a directory (default /)<br>ext4size  - determine a file&#x27;s size<br>ext4write - create a file in the root directory<br>false     - do nothing, unsuccessfully<br>fastboot  - run as a fastboot usb or udp device<br>fatinfo   - print information about filesystem<br>fatload   - load binary file from a dos filesystem<br>fatls     - list files in a directory (default /)<br>fatsize   - determine a file&#x27;s size<br>fdt       - flattened device tree utility commands<br>flinfo    - print FLASH memory information<br>fstype    - Look up a filesystem type<br>fuse      - Fuse sub-system<br>go        - start application at address &#x27;addr&#x27;<br>gpio      - query and control gpio pins<br>gpt       - GUID Partition Table<br>help      - print command description/usage<br>i2c       - I2C sub-system<br>icache    - enable or disable instruction cache<br>itest     - return true/false on integer compare<br>lcdputs   - print string on video framebuffer<br>led       - manage LEDs<br>ln        - Create a symbolic link<br>load      - load binary file from a filesystem<br>loadb     - load binary file over serial line (kermit mode)<br>loads     - load S-Record file over serial line<br>loadx     - load binary file over serial line (xmodem mode)<br>loady     - load binary file over serial line (ymodem mode)<br>loop      - infinite loop on address range<br>ls        - list files in a directory (default /)<br>md        - memory display<br>mdio      - MDIO utility commands<br>meminfo   - display memory information<br>mii       - MII utility commands<br>mm        - memory modify (auto-incrementing address)<br>mmc       - MMC sub system<br>mmcinfo   - display MMC info<br>mtd       - MTD utils<br>mtdparts  - define flash/nand partitions<br>mtest     - simple RAM read/write test<br>mw        - memory write (fill)<br>nand      - NAND sub-system<br>nboot     - boot from NAND device<br>nfs       - boot image via network using NFS protocol<br>nm        - memory modify (constant address)<br>part      - disk partition related commands<br>ping      - send ICMP ECHO_REQUEST to network host<br>pinmux    - show pin-controller muxing<br>pmic      - PMIC sub-system<br>poweroff  - Perform POWEROFF of the device<br>printenv  - print environment variables<br>protect   - enable or disable FLASH write protection<br>pxe       - commands to get and boot from pxe files<br>random    - fill memory with random pattern<br>regulator - uclass operations<br>reset     - Perform RESET of the CPU<br>rproc     - Control operation of remote processors in an SoC<br>run       - run commands in an environment variable<br>save      - save file to a filesystem<br>saveenv   - save environment variables to persistent storage<br>setcurs   - set cursor position within screen<br>setenv    - set environment variables<br>setexpr   - set environment variable as the result of eval expression<br>sf        - SPI flash sub-system<br>showvar   - print local hushshell variables<br>size      - determine a file&#x27;s size<br>sleep     - delay execution for some time<br>source    - run script from memory<br>sspi      - SPI utility command<br>stboard   - read/write board reference in OTP<br>stm32key  - Fuse ST Hash key<br>stm32prog - &lt;link&gt; &lt;dev&gt; [&lt;addr&gt;] [&lt;size&gt;]<br>start communication with tools STM32Cubeprogrammer on &lt;link&gt; with Flashlayout at &lt;addr&gt;<br>sysboot   - command to get and boot from syslinux files<br>test      - minimal test like /bin/sh<br>tftpboot  - boot image via network using TFTP protocol<br>time      - run commands and summarize execution time<br>timer     - access the system timer<br>true      - do nothing, successfully<br>ubi       - ubi commands<br>ubifsload - load file from an UBIFS filesystem<br>ubifsls   - list files in a directory<br>ubifsmount- mount UBIFS volume<br>ubifsumount- unmount UBIFS volume<br>ums       - Use the UMS [USB Mass Storage]<br>usb       - USB sub-system<br>usbboot   - boot from USB device<br>version   - print monitor, compiler and linker version<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>查询命令 ：bdinfo&#x2F;printenv&#x2F;version;可以查看板子外设基础信息，版本号等等。</p>
+</li>
+<li><p>修改环境变量命令：setenv这个是设置环境变量，saveenv是保存环境变量。我们设置uboot延迟几秒开始启动内核时间参数。这样可以有助于我们方便进入uboot命令行模式。可以看到等待时间已经变成10秒了</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">setevn</span> bootdelay <span class="hljs-number">10</span><br><span class="hljs-attribute">saveenv</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703194627.png" srcset="/img/loading.gif" lazyload alt="截图20240703194627"></p>
+</li>
+<li><p>内存操作命令：内存查看命令md[.d&#x2F;.w&#x2F;.l] address [#of objects]。[.d&#x2F;.w&#x2F;.l]表示以什么类型的内存数据来看；[#of objects]表示从那个地址开始多少个值。这里是十六进制数，比如要看20个，那这里就是十六进制的14。</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703195332.png" srcset="/img/loading.gif" lazyload alt="截图20240703195332"></p>
+</li>
+<li><p>网络命令：首先配置网络；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">setenv ipaddr 192.168.6.8<br>setenv ethaddr 6E:0C:C3:84:DE:7B<br>setenv gatewayip 192.168.6.1<br>setenv netmask 255.255.255.0<br>setenv serverip 192.168.6.6<br>saveenvsa<br>//这里要根据自己的来配置<br></code></pre></td></tr></table></figure>
+
+<p>重新启动，然后ping一下主机。还有其他命令，dhcp命令，用于从路由器获取IP地址；</p>
+<p>重点的nfs命令；这个命令可以直接通过网络把主机的文件挂载到DRAM的内存的某个地址。还有一个tftp命令也是通过网络直接把网络上的下载到DRAM内。但是这要主机上面安装了tftp服务。</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703201103.png" srcset="/img/loading.gif" lazyload alt="截图20240703201103"></p>
+</li>
+<li><p>内存操作命令：？mmc可以列出来所有命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs shell">mmc info - display info of the current MMC device<br>mmc read addr blk# cnt<br>mmc write addr blk# cnt<br>mmc erase blk# cnt<br>mmc rescan<br>mmc part - lists available partition on current mmc device<br>mmc dev [dev] [part] - show or set current mmc device [partition]<br>mmc list - lists available devices<br>mmc hwpartition [args...] - does hardware partitioning<br>  arguments (sizes in 512-byte blocks):<br>    [user [enh start cnt] [wrrel &#123;on|off&#125;]] - sets user data area attributes<br>    [gp1|gp2|gp3|gp4 cnt [enh] [wrrel &#123;on|off&#125;]] - general purpose partition<br>    [check|set|complete] - mode, complete set partitioning completed<br>  WARNING: Partitioning is a write-once setting once it is set to complete.<br>  Power cycling is required to initialize partitions after set to complete.<br>mmc bootbus dev boot_bus_width reset_boot_bus_width boot_mode<br> - Set the BOOT_BUS_WIDTH field of the specified device<br>mmc bootpart-resize &lt;dev&gt; &lt;boot part size MB&gt; &lt;RPMB part size MB&gt;<br> - Change sizes of boot and RPMB partitions of specified device<br>mmc partconf dev [boot_ack boot_partition partition_access]<br> - Show or change the bits of the PARTITION_CONFIG field of the specified device<br>mmc rst-function dev value<br> - Change the RST_n_FUNCTION field of the specified device<br>   WARNING: This is a write-once field and 0 / 1 / 2 are the only valid values.<br>mmc setdsr &lt;value&gt; - set DSR register value<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>重要的两个环境变量bootcmd和bootargs</p>
+<p>bootcmd保存着uboot的默认命令，当bootdelay时间结束后，就会默认执行该环境变量里面的命令</p>
+<p>bootargs保存着uboot传递给linux内核的参数，比如指定linux内核使用的console、rootfs在哪里</p>
+</li>
+</ul>
+<h2 id="2-4通过tftp网络来将镜像加载进DRAM里面"><a href="#2-4通过tftp网络来将镜像加载进DRAM里面" class="headerlink" title="2&#x2F;4通过tftp网络来将镜像加载进DRAM里面"></a>2&#x2F;4通过tftp网络来将镜像加载进DRAM里面</h2><ul>
+<li><p>ubuntu安装相关tftp服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt-get update<br>sudo apt-get install tftp-hpa tftpd-hpa<br>sudo apt-get install xinetd<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>然后需要一个文件夹来作为uboot挂载点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo mkdir /home/qaq-xyz/Linux/tftpboot<br>cd /home/qaq-xyz/Linux/tftpboot<br>chmod 777 tftpboot<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>修改默认配置，让默认挂载点是我们建立的文件夹下面</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo vi /etc/xinetd.d/tftp<br><span class="hljs-meta prompt_">#</span><span class="language-bash">写入下面内容</span><br> 1 server tftp<br>  2 &#123;<br>  3         socket_type     = dgram<br>  4         protocol        = udp<br>  5         wait            = yes<br>  6         user            = root<br>  7         server          = /usr/sbin/in.tftpd<br>  8         server_args     = -s /home/qaq-xyz/Linux/tftpboot/<br>  9         disable         = no<br> 10         per_source      = 11<br> 11         cps             = 100 2<br> 12         flags           = IPv4<br> 13 &#125;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">保存退出</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启服务</span><br>sudo service tftpd-hpa start<br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改默认文件</span><br>sudo /etc/default/tftpd-hpa<br><span class="hljs-meta prompt_">#</span><span class="language-bash">写入如下</span><br>  1 # /etc/default/tftpd-hpa<br>  2<br>  3 TFTP_USERNAME=&quot;tftp&quot;<br>  4 TFTP_DIRECTORY=&quot;/home/qaq-xyz/Linux/tftpboot&quot;<br>  5 TFTP_ADDRESS=&quot;:69&quot;<br>  6 TFTP_OPTIONS=&quot;-l -c -s&quot;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启服务</span><br>sudo service tftpd-hpa restart<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>拷贝相应的uImage到挂载点目录下，并且赋予chmod 777权限</p>
+</li>
+<li><p>板子上电，进入uboot命令行，输入如下命令。得到结果如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">tftp c2000000 uImage<br></code></pre></td></tr></table></figure>
+
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703221643.png" srcset="/img/loading.gif" lazyload alt="截图20240703221643"></p>
+</li>
+<li><p>同理把内核设备树也考到该文件夹下面，然后在uboot命令行模式设置bootcmd这个环境变量为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">setenv bootcmd &#x27;tftp c2000000 uImage;tftp c4000000 stm32mp157d-atk.dtb;bootm c2000000 - c4000000&#x27;  <br>saveenv<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>重启板子，可以看到内核启动了<img src="/./../photo/%E6%88%AA%E5%9B%BE20240703222732.png" srcset="/img/loading.gif" lazyload alt="截图20240703222732"></p>
+</li>
+<li><p>可以从这里根文件系统没有挂载，所以不能完整启动</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240703222802.png" srcset="/img/loading.gif" lazyload alt="截图20240703222802"></p>
+</li>
+</ul>
+<h2 id="2-5通过SD卡启动linux内核"><a href="#2-5通过SD卡启动linux内核" class="headerlink" title="2&#x2F;5通过SD卡启动linux内核"></a>2&#x2F;5通过SD卡启动linux内核</h2><ul>
+<li><p>SD卡初始化后，我们有一个64M分区来装linux镜像跟设备树的分区；为了让uboot命令能够识别文件，我们需要对该分区进行格式化，将其格式化为FAT32格式的分区。如下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo mkfs.vfat /dev/sdb4 //这里根据实际的分区来进行格式化。<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>为什么上面的1 2 3分区不用进行某个文件格式的格式化。因为tfa和uboot一般都是二进制文件，处理器能够直接进行操作，能够进行解析。</p>
+</li>
+<li><p>将该分区挂载到主机的某个目录下，这里不能用dd命令了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo mount /dev/sdb4 /mnt/sdcard<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>将镜像文件跟设备树文件拷贝到挂载目录下</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240704125007.png" srcset="/img/loading.gif" lazyload alt="截图20240704125007"></p>
+</li>
+<li><p>插入SD卡后，开机进入boot命令模式，设置bootcmd环境变量后，启动内核成功</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240704125415.png" srcset="/img/loading.gif" lazyload alt="截图20240704125415"></p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240704125558.png" srcset="/img/loading.gif" lazyload alt="截图20240704125558"></p>
+</li>
+</ul>
+<h2 id="2-5根文件系统制作"><a href="#2-5根文件系统制作" class="headerlink" title="2&#x2F;5根文件系统制作"></a>2&#x2F;5根文件系统制作</h2><ul>
+<li><p>使用buildroot工具来制作，到官网下载源码<a target="_blank" rel="noopener" href="https://buildroot.org/download.html">Buildroot - 让嵌入式 Linux 变得简单</a>；</p>
+</li>
+<li><p>将文件拷贝到ubuntu里面，进行解压配置。</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240704141753.png" srcset="/img/loading.gif" lazyload alt="截图20240704141753"></p>
+</li>
+<li><p>开始配置;make menuconfig</p>
+<p> Target options ：</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240705104903.png" srcset="/img/loading.gif" lazyload alt="截图20240705104903"></p>
+<p>Toolchain：根据自己的需求设置，看是用自带的去网上下载的工具链，还是用已经安装的工具链</p>
+<p>System configuration ：根据自己设置，密码之类的</p>
+<p>Filesystem images：</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240705105232.png" srcset="/img/loading.gif" lazyload alt="截图20240705105232"></p>
+<p>其他的选项根据个人配置，来选择是不是要用自带编译bootloader 内核</p>
+</li>
+<li><p>配置完直接make；会在output&#x2F;images&#x2F;下面生成相应的文件</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240705110738.png" srcset="/img/loading.gif" lazyload alt="截图20240705110738"></p>
+</li>
+<li><p>把SD卡第五个分区挂载到主机某个目录下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo /dev/sdb5 /mnt/sdcard<br></code></pre></td></tr></table></figure>
+
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240705134804.png" srcset="/img/loading.gif" lazyload alt="截图20240705134804"></p>
+</li>
+<li><p>把rootfs.tar拷贝到&#x2F;mnt&#x2F;sdcard里面</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo cp rootfs.tar /mnt/sdcard<br>cd /mnt/sdcard<br>sudo tar -vxf rootf.tar<br></code></pre></td></tr></table></figure>
+
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240705135140.png" srcset="/img/loading.gif" lazyload alt="截图20240705135140"></p>
+</li>
+<li><p>把SD卡插入板子，进入boot命令行，设置bootargs这个环境变量</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240705135634.png" srcset="/img/loading.gif" lazyload alt="截图20240705135634"></p>
+<p><font color=red>这一步有个大坑，一定要注意。在uboot中，SD卡是作为mmc0;EMMC是作为mmc1;但是启动根文件的时候，是内核启动，所以一定要看内核把SD卡定义为mmc几。看启动内核日志。可以看到下图，SD卡是作为mmc1了。所以boot命令传递给内核参数的时候，指定根文件所在的位置，一定是root&#x3D;&#x2F;dev&#x2F;mmcblk1（这里表示的是mmc1设备）；这不能搞成了uboot中的mmc0；不然会一直卡在等待root device</font></p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240705140047.png" srcset="/img/loading.gif" lazyload alt="截图20240705140047"></p>
+</li>
+<li><p>一切准备就绪后，就可以进入最基础的根文件系统了。</p>
+<p><img src="/./../photo/%E6%88%AA%E5%9B%BE20240705140934.png" srcset="/img/loading.gif" lazyload alt="截图20240705140934"></p>
+</li>
+</ul>
+<h1 id="3、使用stm32image工具来做个裸机小实验"><a href="#3、使用stm32image工具来做个裸机小实验" class="headerlink" title="3、使用stm32image工具来做个裸机小实验"></a>3、使用stm32image工具来做个裸机小实验</h1><p>- </p>
+
                 
               </div>
             
